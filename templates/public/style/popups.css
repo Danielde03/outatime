@@ -1,0 +1,78 @@
+
+:root {
+    --main-color: rgb(25,26,31);
+    --link-color: rgb(33,99,232);
+    --prompt-width: 400px;
+    --prompt-height: 500px;
+    --prompt-padding: 20px;
+}
+
+/* animations */
+@keyframes fade {
+    0%   {opacity: 0;}
+    100%  {opacity: 1.0;}
+}
+
+@keyframes grow {
+    0%   {height: 0; width: 0;}
+    100%  {height: var(--prompt-height); width: var(--prompt-width);}
+}
+
+
+/* prompt styles */
+#fog {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: var(--main-color);
+    margin: 0;
+}
+
+#prompt {
+    width: var(--prompt-width);
+    height: var(--prompt-height);
+    animation-name: grow;
+    animation-duration: 0.5s;
+    z-index: 2;
+    position: fixed;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    background-color: white;
+
+    border-radius: 20px;
+    color: var(--main-color);
+
+    padding: var(--prompt-padding);
+
+    overflow: hidden;
+}
+
+#prompt > * {
+    width: calc(var(--prompt-width) - var(--prompt-padding) - var(--prompt-padding));
+}
+
+#prompt > form > input {
+    width: calc(var(--prompt-width) - var(--prompt-padding) - var(--prompt-padding));
+    margin-bottom: var(--prompt-padding);
+    height: 30px;
+}
+
+/* Parent */
+#wholePrompt {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+    animation-name: fade;
+    animation-duration: 0.5s;
+    z-index: 2;
+}
+
+/* Submit button */
+#submit {
+    background-color: var(--main-color);
+    color: white;
+}
+#submit:hover {
+    cursor: pointer;
+}

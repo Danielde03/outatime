@@ -1,0 +1,20 @@
+{{/* The main layout that all pages will follow */}}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>OutaTime Events</title>
+        <link rel="stylesheet" href="./public/style/main.css" type="text/css">
+        <link rel="stylesheet" href="./public/style/popups.css" type="text/css">
+    </head>
+
+    <body>
+        <header>
+            {{template "nav"}}
+        </header>
+
+        <div id="content">
+            {{template "body" .}}
+        </div>
+        <script src="./public/script/loginout.js"></script>
+    </body>
+</html>

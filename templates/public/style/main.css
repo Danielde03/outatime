@@ -1,0 +1,98 @@
+
+
+@font-face {
+    font-family: "lato";
+    src: url("./fonts/Lato/Lato-Bold.ttf");
+}
+
+:root {
+    --main-color: rgb(25,26,31);
+    --gradient-color: rgb(31,32,37);
+    --link-color: rgb(33,99,232);
+    --content-width: 60vw;
+    --header-height: 51px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-image: linear-gradient(to bottom, var(--gradient-color), var(--main-color));
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    overflow-x: hidden;
+    min-height: 100vh;
+    height: auto;
+    margin: 0;
+    font-family: "lato", sans-serif;
+    color: white;
+}
+
+
+
+
+
+/* nav bar styles */
+header {
+    background-color: var(--main-color);
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    height: var(--header-height);
+    z-index: 1;
+    font-size: 16px;
+}
+
+#nav {
+    width: var(--content-width);
+    display: flex;
+    justify-content: space-between;
+}
+
+#links {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#links > * {
+    padding-left: 1.5vw;
+    padding-right: 1.5vw;
+}
+
+#links > * > * {
+    color: white;
+    text-decoration: none;
+}
+#links > * > *:hover {
+    color: var(--link-color);
+}
+
+
+/* log in/out button */
+#use-buttons > p:hover {
+    color: var(--link-color);
+    cursor: pointer;
+}
+
+
+/* content styles */
+
+#content {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    margin-bottom: 10vh;
+    position: absolute;
+    top: calc(var(--header-height) * 2);
+}
+
+#body {
+    width: var(--content-width);
+}
