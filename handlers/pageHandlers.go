@@ -22,7 +22,8 @@ func Root(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// TODO: can't go to regular pages if logged in, and not to user pages if logged out
+	// Stop logged in viewers from getting to main pages
+	util.RedirectToUser(res, req)
 
 	err := util.RenderTemplate(res, "home", loggedIn, nil)
 	if err != nil {

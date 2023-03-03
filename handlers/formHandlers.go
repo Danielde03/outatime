@@ -5,7 +5,8 @@ import (
 	"outatime/util"
 )
 
-const auth_cookie_age = 60
+// time a user will stay logged in (seconds)
+const auth_cookie_age = 60 * 60 * 24
 
 // Log a user in
 //
