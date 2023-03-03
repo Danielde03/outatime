@@ -6,6 +6,8 @@ import (
 )
 
 // Get routes Mux
+//
+// Handle static routes
 func GetRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
 

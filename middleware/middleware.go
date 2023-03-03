@@ -38,6 +38,8 @@ func CheckAuth(next http.Handler) http.Handler {
 			}
 		}
 
+		defer rows.Close()
+
 		// set id in req Header
 		req.Header.Add("user_id", id)
 

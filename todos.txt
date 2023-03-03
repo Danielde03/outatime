@@ -1,5 +1,3 @@
-pageHandlers.go     x2
-
 loginout.js         x3
 
 formHandlers.go     x1

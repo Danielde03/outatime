@@ -42,6 +42,7 @@ func GetUserURL(id string) string {
 		}
 	}
 
+	defer rows.Close()
 	return userURL
 
 }
