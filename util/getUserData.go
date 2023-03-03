@@ -1,6 +1,24 @@
 package util
 
-import "errors"
+import (
+	"errors"
+	"net/http"
+)
+
+// Determine if a user is logged in.
+//
+// Returns true if so and a sting of the id.
+func IsLoggedIn(req *http.Request) (bool, string) {
+
+	id := req.Header.Get("user_id")
+
+	if len(id) > 0 {
+		return true, id
+	}
+
+	return false, id
+
+}
 
 // Get a user's URL based on the ID
 //
