@@ -22,6 +22,8 @@ func GetRoutes() *http.ServeMux {
 	mux.HandleFunc("/logout", handlers.Logout)
 
 	// page routes
+
+	// check if dynamic, 404 or root
 	mux.HandleFunc("/", rootOr404)
 
 	return mux
@@ -82,7 +84,7 @@ func checkForDynamicRoutes(res http.ResponseWriter, req *http.Request) bool {
 			count += 1
 		}
 
-		// Route
+		// If is in database, route
 		if count > 0 {
 			found = routeDynamicURL(url, user_url, res, req)
 
@@ -95,7 +97,7 @@ func checkForDynamicRoutes(res http.ResponseWriter, req *http.Request) bool {
 
 }
 
-// Get rit of empty strings in array
+// Get rit of empty strings in slice
 func delete_empty(s []string) []string {
 	var r []string
 	for _, str := range s {
@@ -111,7 +113,7 @@ func delete_empty(s []string) []string {
 // Return true if a page was found.
 func routeDynamicURL(url string, user_url string, res http.ResponseWriter, req *http.Request) bool {
 
-	// get url after user's url
+	// get trailing url after user's url
 	restOfUrl := strings.SplitAfter(url, "/"+user_url)[1]
 	if restOfUrl == "" {
 		restOfUrl = "/"
