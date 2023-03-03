@@ -5,6 +5,8 @@ import (
 	"outatime/util"
 )
 
+// TODO: send seperate data to nav bar as to body
+
 // Handle /
 func Root(res http.ResponseWriter, req *http.Request) {
 

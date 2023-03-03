@@ -52,7 +52,7 @@ func GetUserURL(id string) string {
 // Get a user by ID
 func GetUserById(id string) *models.User {
 
-	rows, err := DatabaseExecute("SELECT user_name, user_avatar, \"isActive\", subscribers FROM outatime.user WHERE user_id = " + id + ";")
+	rows, err := DatabaseExecute("SELECT user_name, user_url, user_avatar, \"isActive\", subscribers FROM outatime.user WHERE user_id = " + id + ";")
 
 	if err != nil {
 		LogError(err, "database")
@@ -60,12 +60,13 @@ func GetUserById(id string) *models.User {
 	}
 
 	var user_name string
+	var user_url string
 	var user_avatar string
 	var user_active bool
 	var user_subs int
 
 	for rows.Next() {
-		err := rows.Scan(&user_name, &user_avatar, &user_active, &user_subs)
+		err := rows.Scan(&user_name, &user_url, &user_avatar, &user_active, &user_subs)
 
 		if err != nil {
 			LogError(err, "database")
@@ -73,14 +74,14 @@ func GetUserById(id string) *models.User {
 		}
 	}
 
-	return &models.User{Name: user_name, Avatar: user_avatar, Active: user_active, Subs: user_subs}
+	return &models.User{Name: user_name, Url: user_url, Avatar: user_avatar, Active: user_active, Subs: user_subs}
 
 }
 
 // Get a user by URL
 func GetUserByUrl(url string) *models.User {
 
-	rows, err := DatabaseExecute("SELECT user_name, user_avatar, \"isActive\", subscribers FROM outatime.user WHERE user_url = '" + url + "';")
+	rows, err := DatabaseExecute("SELECT user_name, user_url, user_avatar, \"isActive\", subscribers FROM outatime.user WHERE user_url = '" + url + "';")
 
 	if err != nil {
 		LogError(err, "database")
@@ -88,12 +89,13 @@ func GetUserByUrl(url string) *models.User {
 	}
 
 	var user_name string
+	var user_url string
 	var user_avatar string
 	var user_active bool
 	var user_subs int
 
 	for rows.Next() {
-		err := rows.Scan(&user_name, &user_avatar, &user_active, &user_subs)
+		err := rows.Scan(&user_name, &user_url, &user_avatar, &user_active, &user_subs)
 
 		if err != nil {
 			LogError(err, "database")
@@ -101,6 +103,6 @@ func GetUserByUrl(url string) *models.User {
 		}
 	}
 
-	return &models.User{Name: user_name, Avatar: user_avatar, Active: user_active, Subs: user_subs}
+	return &models.User{Name: user_name, Url: user_url, Avatar: user_avatar, Active: user_active, Subs: user_subs}
 
 }
