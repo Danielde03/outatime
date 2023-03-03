@@ -18,6 +18,7 @@ func CheckAuth(next http.Handler) http.Handler {
 			return
 		}
 
+		// if logged in, get ID and put in req Header
 		auth_code := auth_code_cookie.Value
 
 		// get user id from database based on auth_code

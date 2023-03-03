@@ -16,14 +16,6 @@ const auth_cookie_age = 60
 // If good, set users auth_code in a cookie
 func Login(res http.ResponseWriter, req *http.Request) {
 
-	/* // TODO: get user's url based on ID and redirect. Make utility for this.
-	loggedIn, id := util.IsLoggedIn(req)
-
-	if loggedIn {
-		http.Redirect(res, req, "/"+id+"/", http.StatusSeeOther)
-	}
-	*/
-
 	// only handle post requests for login
 	if req.Method == "GET" {
 		http.Redirect(res, req, "/", http.StatusSeeOther)
@@ -37,19 +29,19 @@ func Login(res http.ResponseWriter, req *http.Request) {
 
 		tokenCookie, err := req.Cookie("token")
 
-		// if no token - sign of bad intent
-		if err != nil {
-			util.LogError(err, "cookies")
-			http.Redirect(res, req, "/", http.StatusSeeOther)
-			return
-		}
-
 		// remove token cookie
 		http.SetCookie(res, &http.Cookie{
 			Name:   "token",
 			Path:   "/",
 			MaxAge: -1,
 		})
+
+		// if no token - sign of bad intent
+		if err != nil {
+			util.LogError(err, "cookies")
+			http.Redirect(res, req, "/", http.StatusSeeOther)
+			return
+		}
 
 		// if token don't match - sign of bad intent
 		if token != tokenCookie.Value {
@@ -88,8 +80,9 @@ func Login(res http.ResponseWriter, req *http.Request) {
 			MaxAge: auth_cookie_age,
 		})
 
-		// TODO change redirect to user's home page - use util discussed in above
-		http.Redirect(res, req, "/", http.StatusSeeOther)
+		// redirect to user's home page
+		http.Redirect(res, req, "/"+util.GetUserURL(userId)+"/", http.StatusSeeOther)
+		return
 	}
 
 }

@@ -161,8 +161,11 @@ function hash(string) {
  * Log out
  */
 function logOut() {
-  let xhr = new XMLHttpRequest();
-  xhr.open("POST", "/logout", false);
-  xhr.send();
-  location.reload();
+  
+  let form = document.createElement("form")
+  form.setAttribute("method", "POST");
+  form.setAttribute("action", "/logout"); 
+  document.querySelector("body").appendChild(form);
+  form.submit();
+
 }
