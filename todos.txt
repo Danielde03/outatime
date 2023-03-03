@@ -1,5 +1,7 @@
-loginout.js         x3
+loginout.js
 
-formHandlers.go     x1
+formHandlers.go
 
-dynamicRoutes.go    x1
+dynamicRoutes.go
+
+pageHanderls.go

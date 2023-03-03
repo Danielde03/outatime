@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"outatime/util"
 )
@@ -22,10 +21,18 @@ func Root(res http.ResponseWriter, req *http.Request) {
 }
 
 // Handle routes to /{{user_url}}/
-func UserHome(res http.ResponseWriter, req *http.Request) {
-	fmt.Println("at home")
+func UserHome(res http.ResponseWriter, req *http.Request, user_url string) {
 
 	// Get user logged in status.
-	// loggedIn, _ := util.IsLoggedIn(req)
+	loggedIn, _ := util.IsLoggedIn(req)
+
+	var user = util.GetUserByUrl(user_url)
+
+	// TODO: make page viewed if not owner, make page editable if owner
+
+	err := util.RenderTemplate(res, "user-home", loggedIn, user)
+	if err != nil {
+		util.LogError(err, "render")
+	}
 
 }

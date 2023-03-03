@@ -122,7 +122,7 @@ func routeDynamicURL(url string, user_url string, res http.ResponseWriter, req *
 	// route
 	switch restOfUrl {
 	case "/":
-		handlers.UserHome(res, req)
+		handlers.UserHome(res, req, user_url)
 		return true
 	default:
 		return false

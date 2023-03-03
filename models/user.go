@@ -1,6 +1,8 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Holds user data from the database.
 type User struct {
@@ -10,6 +12,6 @@ type User struct {
 	Subs   int
 }
 
-func (u *User) Display() {
-	fmt.Println(u.Name, u.Active, u.Subs, u.Avatar)
+func (u *User) Display() string {
+	return fmt.Sprintln(u.Name, u.Active, u.Subs, u.Avatar)
 }

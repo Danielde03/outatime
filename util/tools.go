@@ -65,7 +65,7 @@ func RandomString(x int, n int) (string, error) {
 // logged in to see what nav bar to use. If not, use standard nav bar.
 //
 // Return error if an error if one appears in parsing or executing templates.
-func RenderTemplate(res http.ResponseWriter, page string, loggedIn bool, pageData *models.PageData) error {
+func RenderTemplate(res http.ResponseWriter, page string, loggedIn bool, pageData models.PageData) error {
 
 	t, err := template.ParseFiles("templates/layout.html", "templates/include/"+page+".html")
 
