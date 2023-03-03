@@ -1,5 +1,7 @@
 package util
 
+import "errors"
+
 // Get a user's URL based on the ID
 //
 // Empty URL means no user at that ID
@@ -18,6 +20,7 @@ func GetUserURL(id string) string {
 
 		if err != nil {
 			LogError(err, "database")
+			LogError(errors.New("GetUserURL() : database error"), "util")
 		}
 	}
 

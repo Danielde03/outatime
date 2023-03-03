@@ -8,7 +8,7 @@ import (
 // Handle /
 func Root(res http.ResponseWriter, req *http.Request) {
 
-	// fmt.Println(req.URL)
+	// TODO: handle routes if a user is logged in or not.
 
 	// Get user logged in status.
 	loggedIn, _ := util.IsLoggedIn(req)
