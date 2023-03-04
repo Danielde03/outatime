@@ -2,9 +2,9 @@
 <div id="nav">
     <div id="logo"><p>OutaTime Events</p></div>
     <div id="links">
-        <p><a href="/{{.Url}}/">My Home</a></p>
-        <p><a href="/{{.Url}}/events">My Events</a></p>
-        <p><a href="/{{.Url}}/account">My Account</a></p>
+        <p><a href="/{{.NavUser.Url}}/">My Home</a></p>
+        <p><a href="/{{.NavUser.Url}}/events">My Events</a></p>
+        <p><a href="/{{.NavUser.Url}}/account">My Account</a></p>
     </div>
     <div id="use-buttons"><p onclick="logOut()">Log out</p></div>
 </div>

@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"net/http"
+	"outatime/models"
 	"outatime/util"
 )
 
@@ -14,9 +15,14 @@ func Root(res http.ResponseWriter, req *http.Request) {
 	util.RedirectToUser(res, req)
 
 	// Get user logged in status.
-	loggedIn, _ := util.IsLoggedIn(req)
+	loggedIn, id := util.IsLoggedIn(req)
+	var data models.PageData
 
-	err := util.RenderTemplate(res, "home", loggedIn, nil)
+	if loggedIn {
+		data.NavUser = *util.GetUserById(id)
+	}
+
+	err := util.RenderTemplate(res, "home", loggedIn, data)
 	if err != nil {
 		util.LogError(err, "render")
 	}
@@ -26,13 +32,18 @@ func Root(res http.ResponseWriter, req *http.Request) {
 func UserHome(res http.ResponseWriter, req *http.Request, user_url string) {
 
 	// Get user logged in status.
-	loggedIn, _ := util.IsLoggedIn(req)
+	loggedIn, id := util.IsLoggedIn(req)
+	var data models.PageData
 
-	var user = util.GetUserByUrl(user_url)
+	if loggedIn {
+		data.NavUser = *util.GetUserById(id)
+	}
+
+	data.PageUser = *util.GetUserByUrl(user_url)
 
 	// TODO: make page viewed if not owner, make page editable if owner
 
-	err := util.RenderTemplate(res, "user-home", loggedIn, user)
+	err := util.RenderTemplate(res, "user-home", loggedIn, data)
 	if err != nil {
 		util.LogError(err, "render")
 	}

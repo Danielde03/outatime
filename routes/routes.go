@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 	"outatime/handlers"
+	"outatime/models"
 	"outatime/util"
 	"strings"
 )
@@ -36,11 +37,16 @@ func rootOr404(res http.ResponseWriter, req *http.Request) {
 	if !checkForDynamicRoutes(res, req) {
 
 		// Get user logged in status.
-		loggedIn, _ := util.IsLoggedIn(req)
+		loggedIn, id := util.IsLoggedIn(req)
+		var data models.PageData
+
+		if loggedIn {
+			data.NavUser = *util.GetUserById(id)
+		}
 
 		// open 404 page if not root, and not dynamic route
 		if req.URL.Path != "/" {
-			err := util.RenderTemplate(res, "404", loggedIn, nil)
+			err := util.RenderTemplate(res, "404", loggedIn, data)
 			if err != nil {
 				util.LogError(err, "render")
 			}
