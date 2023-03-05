@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS "outatime"."link";
 DROP TABLE IF EXISTS "outatime"."user";
 
 -- create schema
-DROP SCHEMA IF EXISTS "outatime";
+DROP SCHEMA IF EXISTS "outatime" CASCADE;
 CREATE SCHEMA IF NOT EXISTS "outatime";
 
 -- create tables
