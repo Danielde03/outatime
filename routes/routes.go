@@ -30,6 +30,28 @@ func GetRoutes() *http.ServeMux {
 	return mux
 }
 
+// If a route has a dynamic user, route it based on trailing address
+//
+// Return true if a page was found.
+func routeDynamicURL(url string, user_url string, res http.ResponseWriter, req *http.Request) bool {
+
+	// get trailing url after user's url
+	restOfUrl := strings.SplitAfter(url, "/"+user_url)[1]
+	if restOfUrl == "" {
+		restOfUrl = "/"
+	}
+
+	// route
+	switch restOfUrl {
+	case "/":
+		handlers.UserHome(res, req, user_url)
+		return true
+	default:
+		return false
+	}
+
+}
+
 // If no static or dynamic page was found, check if root. If is, send to root handler, else open 404 page
 func rootOr404(res http.ResponseWriter, req *http.Request) {
 
@@ -112,26 +134,4 @@ func delete_empty(s []string) []string {
 		}
 	}
 	return r
-}
-
-// If a route has a dynamic user, route it based on trailing address
-//
-// Return true if a page was found.
-func routeDynamicURL(url string, user_url string, res http.ResponseWriter, req *http.Request) bool {
-
-	// get trailing url after user's url
-	restOfUrl := strings.SplitAfter(url, "/"+user_url)[1]
-	if restOfUrl == "" {
-		restOfUrl = "/"
-	}
-
-	// route
-	switch restOfUrl {
-	case "/":
-		handlers.UserHome(res, req, user_url)
-		return true
-	default:
-		return false
-	}
-
 }
