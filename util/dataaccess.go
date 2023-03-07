@@ -15,6 +15,9 @@ const (
 	dbname   = "outatime"
 )
 
+// TODO: get rid of concatination for queries
+// TODO: set up new account on DB for the app to use, not "postgres @dm1n"
+
 // execute command to database
 //
 // Return rows and error if one is thrown
