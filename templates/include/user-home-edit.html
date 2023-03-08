@@ -3,6 +3,14 @@
 {{define "body"}}
 <div id="body">
     <h1>Edit: <i>"{{.PageUser.Name}}"</i></h1>
-    <input type="text" value="{{.UserPage.About}}">
+    <input type="text" value="{{.UserPage.About}}"><br />
+    <label>Public: 
+    
+        {{if .UserPage.Public}}
+            <input type="checkbox" checked>
+        {{else}}
+            <input type="checkbox">
+        {{end}}
+    </label>
 </div>
 {{end}}
