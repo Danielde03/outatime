@@ -34,6 +34,10 @@ function submitForm(url) {
           document.getElementById("message").innerText = xhr.responseText;
           passInput.value = "";
 
+          // account created - login
+        } else if (xhr.status === 201) {
+          passInput.value = password;
+          submitForm("/login")
         }
     }; 
     

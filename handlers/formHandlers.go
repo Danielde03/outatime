@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"outatime/util"
@@ -116,9 +117,14 @@ func Logout(res http.ResponseWriter, req *http.Request) {
 // If bad - return 500 and message.
 func SignUp(res http.ResponseWriter, req *http.Request) {
 
+	if req.Method == "GET" {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
+	}
+
 	// get values from form
-	// email := req.FormValue("email")
-	// password := req.FormValue("password")
+	email := req.FormValue("email")
+	password := req.FormValue("password")
 	username := req.FormValue("username")
 	token := req.FormValue("token")
 
@@ -144,12 +150,23 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// ensure email is unique
+	// ensure email is unique - if not, return error
+	if !util.IsUnique(email, "user_email", "user") {
+		http.Error(res, "Email is already in use", 500)
+		return
+	}
 
 	// make url - ensure is unique TODO: add more replace functions based on validation
 	url := username
 	url = strings.ReplaceAll(url, " ", "")
 	url = strings.ReplaceAll(url, "?", "")
+
+	i := 1
+
+	for !util.IsUnique(url, "user_url", "user") {
+		url += fmt.Sprintf("%d", i)
+		i++
+	}
 
 	// make auth_code and validate_code - if non unique error is returned, remake codes and reinsert account
 	auth_code, err := util.RandomString(5, 5)
@@ -174,6 +191,12 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	http.Error(res, "Made it to the end!", 500)
+	// add to database TODO: take out isActive and isValid
+	_, err = util.DatabaseExecute("INSERT INTO outatime.\"user\"(user_name, user_url, user_email, user_password, auth_code, user_avatar, validate_code, \"isValid\", \"isActive\") VALUES ('" + username + "', '" + url + "', '" + email + "', '" + password + "', '" + auth_code + "', ' ', '" + validation_code + "', true, true)")
+	if err != nil {
+		util.LogError(err, "database")
+	}
+
+	http.Error(res, "Account made", http.StatusCreated)
 
 }
