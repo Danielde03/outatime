@@ -67,7 +67,7 @@ func Login(res http.ResponseWriter, req *http.Request) {
 			}
 		}
 
-		// if no return val TODO: notify no account returned. Instead of redirect, send back status. If 200, reload, user is logged in. If 500, declair no account found.
+		// if no return val
 		if auth_code == "" {
 			http.Error(res, "Email or password is invalid", 500)
 			return
