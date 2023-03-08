@@ -4,7 +4,7 @@ CREATE OR REPLACE FUNCTION outatime.make_user_page_func() RETURNS trigger
 $$BEGIN
    
     INSERT INTO outatime.user_page (user_id, banner)
-        VALUES (NEW.user_id, " ");
+        VALUES (NEW.user_id, ' ');
 
     RETURN NEW;
 
