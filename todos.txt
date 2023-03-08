@@ -1,8 +1,4 @@
-loginout.js
-
 formHandlers.go
-
-dynamicRoutes.go
 
 pageHanderls.go
 
