@@ -49,6 +49,34 @@ func GetUserURL(id string) string {
 
 }
 
+// Get a user's URL based on the ID
+//
+// Empty URL means no user at that ID
+func GetUserId(url string) string {
+
+	rows, err := DatabaseExecute("SELECT user_id FROM outatime.user WHERE user_url = '" + url + "';")
+
+	if err != nil {
+		LogError(err, "database")
+		LogError(errors.New("GetUserId() : database error"), "util")
+	}
+
+	userId := ""
+
+	for rows.Next() {
+		err := rows.Scan(&userId)
+
+		if err != nil {
+			LogError(err, "database")
+			LogError(errors.New("GetUserId() : database error"), "util")
+		}
+	}
+
+	defer rows.Close()
+	return userId
+
+}
+
 // Get a user by ID
 func GetUserById(id string) *models.User {
 
@@ -104,5 +132,35 @@ func GetUserByUrl(url string) *models.User {
 	}
 
 	return &models.User{Name: user_name, Url: user_url, Avatar: user_avatar, Active: user_active, Subs: user_subs}
+
+}
+
+// Get the page data of a user based on user id
+func GetUserPage(user_id string) *models.UserPage {
+
+	rows, err := DatabaseExecute("SELECT \"aboutUs\", banner, \"isPublic\" FROM outatime.user_page WHERE user_id = " + user_id + ";")
+
+	if err != nil {
+		LogError(err, "database")
+		LogError(errors.New("GetUserPage() : database error"), "util")
+	}
+
+	var about string
+	var banner string
+	var public bool
+
+	for rows.Next() {
+		err := rows.Scan(&about, &banner, &public)
+
+		if err != nil {
+			LogError(err, "database")
+			LogError(errors.New("GetUserPage() : database error"), "util")
+		}
+	}
+
+	page := &models.UserPage{About: about, Banner: banner, Public: public}
+
+	defer rows.Close()
+	return page
 
 }

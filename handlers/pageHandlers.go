@@ -40,6 +40,7 @@ func UserHome(res http.ResponseWriter, req *http.Request, user_url string) {
 	}
 
 	data.PageUser = *util.GetUserByUrl(user_url)
+	data.UserPage = *util.GetUserPage(util.GetUserId(user_url))
 
 	// TODO: make page viewed if not owner, make page editable if owner
 

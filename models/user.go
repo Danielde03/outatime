@@ -8,3 +8,9 @@ type User struct {
 	Active bool
 	Subs   int
 }
+
+type UserPage struct {
+	About  string
+	Banner string
+	Public bool
+}

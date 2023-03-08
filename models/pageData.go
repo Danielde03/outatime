@@ -7,4 +7,7 @@ type PageData struct {
 
 	// The user logged in
 	NavUser User
+
+	// User page data
+	UserPage UserPage
 }
