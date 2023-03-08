@@ -35,18 +35,26 @@ func UserHome(res http.ResponseWriter, req *http.Request, user_url string) {
 	loggedIn, id := util.IsLoggedIn(req)
 	var data models.PageData
 
-	if loggedIn {
-		data.NavUser = *util.GetUserById(id)
-	}
-
 	data.PageUser = *util.GetUserByUrl(user_url)
 	data.UserPage = *util.GetUserPage(util.GetUserId(user_url))
 
-	// TODO: make page viewed if not owner, make page editable if owner
+	if loggedIn {
 
-	err := util.RenderTemplate(res, "user-home", loggedIn, data)
-	if err != nil {
-		util.LogError(err, "render")
+		// if logged in to own, make own page editable
+		data.NavUser = *util.GetUserById(id)
+		err := util.RenderTemplate(res, "user-home-edit", loggedIn, data)
+		if err != nil {
+			util.LogError(err, "render")
+		}
+	} else {
+
+		// TODO: make page viewed if not owner, make page editable if owner
+
+		err := util.RenderTemplate(res, "user-home", loggedIn, data)
+		if err != nil {
+			util.LogError(err, "render")
+		}
+
 	}
 
 }
