@@ -40,13 +40,13 @@ func Login(res http.ResponseWriter, req *http.Request) {
 		// if no token - sign of bad intent
 		if err != nil {
 			util.LogError(err, "cookies")
-			http.Redirect(res, req, "/", http.StatusSeeOther)
+			http.Error(res, "Token cookie not found", 500)
 			return
 		}
 
 		// if token don't match - sign of bad intent
 		if token != tokenCookie.Value {
-			http.Redirect(res, req, "/", http.StatusSeeOther)
+			http.Error(res, "Token does not match", 500)
 			return
 		}
 
@@ -67,9 +67,9 @@ func Login(res http.ResponseWriter, req *http.Request) {
 			}
 		}
 
-		// if no return val TODO: notify no account returned
+		// if no return val TODO: notify no account returned. Instead of redirect, send back status. If 200, reload, user is logged in. If 500, declair no account found.
 		if auth_code == "" {
-			http.Redirect(res, req, "/", http.StatusSeeOther)
+			http.Error(res, "Email or password is invalid", 500)
 			return
 		}
 
@@ -82,7 +82,7 @@ func Login(res http.ResponseWriter, req *http.Request) {
 		})
 
 		// redirect to user's home page
-		http.Redirect(res, req, "/"+util.GetUserURL(userId)+"/", http.StatusSeeOther)
+		http.Error(res, "Logged in", 200)
 		return
 	}
 

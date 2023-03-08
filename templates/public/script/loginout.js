@@ -4,13 +4,10 @@
  */
 function submitForm() {
     
+  // get and has password
     let passInput = document.querySelector("#password-input")
     let password = passInput.value;
-
-    // set destination
-    let form = document.querySelector("#login-form");
-    form.setAttribute("method", "POST");
-    form.setAttribute("action", "/login"); 
+    passInput.value = hash(password);
 
     // set token value
     let tokenValue = Math.random() * 10_000;
@@ -19,9 +16,28 @@ function submitForm() {
     token.value = tokenValue;
 
     // TODO: check input values
-    passInput.value = hash(password);
+    
 
-    form.submit();
+    // Send login form
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/login"); 
+    xhr.onload = function(event){ 
+
+        // if login is good
+        if (xhr.status === 200) {
+
+          location.reload();
+
+
+        } else if (xhr.status === 500) {
+
+          document.getElementById("message").innerText = xhr.responseText;
+
+        }
+    }; 
+    
+    var formData = new FormData(document.getElementById("login-form")); 
+    xhr.send(formData);
     return false;
 
 }
@@ -89,6 +105,10 @@ function loginPrompt() {
     token.setAttribute("required", "");
     token.setAttribute("value", " ");
     form.appendChild(token);
+
+    let message = document.createElement("span");
+    message.id = "message";
+    form.appendChild(message);
     
     // login input
     let login = document.createElement("input");
