@@ -2,6 +2,7 @@ package util
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 
 	_ "github.com/lib/pq"
@@ -44,4 +45,24 @@ func DatabaseExecute(command string) (*sql.Rows, error) {
 
 	return results, nil
 
+}
+
+// Check if a value is unique in a table
+func IsUnique(value string, field string, table string) bool {
+
+	rows, err := DatabaseExecute("SELECT " + field + " FROM outatime." + table + " WHERE " + field + " = '" + value + "'")
+
+	if err != nil {
+		LogError(err, "database")
+		LogError(errors.New("IsUnique() : database error"), "util")
+	}
+
+	// get number of rows returned
+	count := 0
+	for rows.Next() {
+		count += 1
+	}
+
+	// If rows are returned, it is in database, return false
+	return count == 0
 }

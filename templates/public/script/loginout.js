@@ -32,6 +32,7 @@ function submitForm(url) {
         } else if (xhr.status === 500) {
 
           document.getElementById("message").innerText = xhr.responseText;
+          passInput.value = "";
 
         }
     }; 

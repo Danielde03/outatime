@@ -152,21 +152,21 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 	url = strings.ReplaceAll(url, "?", "")
 
 	// make auth_code and validate_code - if non unique error is returned, remake codes and reinsert account
-	// auth_code, err := util.RandomString(5, 5)
-	// if err != nil {
-	// 	util.LogError(err, "util")
-	// 	http.Error(res, "Error making auth_code", 500)
-	// 	return
-	// }
+	auth_code, err := util.RandomString(5, 5)
+	if err != nil {
+		util.LogError(err, "util")
+		http.Error(res, "Error making auth_code", 500)
+		return
+	}
 
-	// validation_code, err := util.RandomString(5, 5)
-	// if err != nil {
-	// 	util.LogError(err, "util")
-	// 	http.Error(res, "Error making validation_code", 500)
-	// 	return
-	// }
+	validation_code, err := util.RandomString(5, 5)
+	if err != nil {
+		util.LogError(err, "util")
+		http.Error(res, "Error making validation_code", 500)
+		return
+	}
 
-	// make file in images
+	// make file in images. TODO: make happen after account is verified.
 	err = os.Mkdir("./templates/public/images/"+url, 0655)
 	if err != nil {
 		util.LogError(err, "files")

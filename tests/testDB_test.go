@@ -24,3 +24,21 @@ func TestErrorThrows(t *testing.T) {
 		t.Errorf("No error was returned when exitng")
 	}
 }
+
+// Make sure unique values return true
+func TestIsUnique(t *testing.T) {
+
+	if !util.IsUnique("hdffdnmdngdndgnn", "user_email", "user") {
+		t.Errorf("IsUnique should be true, but returns false")
+	}
+}
+
+// Make sure unique values return true
+//
+// DATABASE MUST HAVE d@p.ca TEST ACCOUNT. WILL FAIL IF NOT
+func TestIsNotUnique(t *testing.T) {
+
+	if util.IsUnique("d@p.ca", "user_email", "user") {
+		t.Errorf("IsUnique should be false, but returns true. - Make sure d@p.ca is in database for this test")
+	}
+}
