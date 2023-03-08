@@ -57,6 +57,12 @@
     height: 30px;
 }
 
+#prompt > a {
+    color: var(--link-color);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 /* Parent */
 #wholePrompt {
     position: fixed;

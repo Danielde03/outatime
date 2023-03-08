@@ -2,7 +2,9 @@ package handlers
 
 import (
 	"net/http"
+	"os"
 	"outatime/util"
+	"strings"
 )
 
 // time a user will stay logged in (seconds)
@@ -102,4 +104,76 @@ func Logout(res http.ResponseWriter, req *http.Request) {
 
 	// redirect to home page
 	http.Redirect(res, req, "/", http.StatusSeeOther)
+}
+
+// Create a new account
+//
+// Will assign given email, username and password,
+// and will make codes and url.
+//
+// If good - login and return 200.
+//
+// If bad - return 500 and message.
+func SignUp(res http.ResponseWriter, req *http.Request) {
+
+	// get values from form
+	// email := req.FormValue("email")
+	// password := req.FormValue("password")
+	username := req.FormValue("username")
+	token := req.FormValue("token")
+
+	tokenCookie, err := req.Cookie("token")
+
+	// delete token cookie
+	http.SetCookie(res, &http.Cookie{
+		Name:   "token",
+		Path:   "/",
+		MaxAge: -1,
+	})
+
+	// if no token - sign of bad intent
+	if err != nil {
+		util.LogError(err, "cookies")
+		http.Error(res, "Token cookie not found", 500)
+		return
+	}
+
+	// if token don't match - sign of bad intent
+	if token != tokenCookie.Value {
+		http.Error(res, "Token does not match", 500)
+		return
+	}
+
+	// ensure email is unique
+
+	// make url - ensure is unique TODO: add more replace functions based on validation
+	url := username
+	url = strings.ReplaceAll(url, " ", "")
+	url = strings.ReplaceAll(url, "?", "")
+
+	// make auth_code and validate_code - if non unique error is returned, remake codes and reinsert account
+	// auth_code, err := util.RandomString(5, 5)
+	// if err != nil {
+	// 	util.LogError(err, "util")
+	// 	http.Error(res, "Error making auth_code", 500)
+	// 	return
+	// }
+
+	// validation_code, err := util.RandomString(5, 5)
+	// if err != nil {
+	// 	util.LogError(err, "util")
+	// 	http.Error(res, "Error making validation_code", 500)
+	// 	return
+	// }
+
+	// make file in images
+	err = os.Mkdir("./templates/public/images/"+url, 0655)
+	if err != nil {
+		util.LogError(err, "files")
+		http.Error(res, "Error making image file", 500)
+		return
+	}
+
+	http.Error(res, "Made it to the end!", 500)
+
 }

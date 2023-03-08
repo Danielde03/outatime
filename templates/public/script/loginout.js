@@ -2,7 +2,7 @@
  * Submit the form
  * Check input
  */
-function submitForm() {
+function submitForm(url) {
     
   // get and has password
     let passInput = document.querySelector("#password-input")
@@ -15,12 +15,12 @@ function submitForm() {
     let token = document.querySelector("#token");
     token.value = tokenValue;
 
-    // TODO: check input values
+    // TODO: check input values - check username in backend, but email and password can both be done here, or maybe just do all in backend (password must be checked here)
     
 
     // Send login form
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "/login"); 
+    xhr.open("POST", url); 
     xhr.onload = function(event){ 
 
         // if login is good
@@ -75,7 +75,7 @@ function loginPrompt() {
     // create form
     let form = document.createElement("form");
     form.id = "login-form";
-    form.setAttribute("onsubmit", "return submitForm();")
+    form.setAttribute("onsubmit", "return submitForm('/login');")
     
     // create inputs
 
@@ -133,7 +133,7 @@ function loginPrompt() {
 
     let signup = document.createElement("a");
     signup.innerText = "Don't have an account? Register here";
-    signup.setAttribute("href", ""); // TODO set link
+    signup.setAttribute("onclick", "signupPrompt()");
     prompt.appendChild(signup);
 
     wholePrompt.appendChild(prompt)
