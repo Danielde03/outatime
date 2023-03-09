@@ -36,6 +36,21 @@ func GetRoutes() *http.ServeMux {
 // Return true if a page was found.
 func routeDynamicURL(url string, user_url string, res http.ResponseWriter, req *http.Request) bool {
 
+	// if not logged in to page's owner and page is private, redirect to root.
+	loggedIn, loggedIn_id := util.IsLoggedIn(req)
+	page := *util.GetUserPage(util.GetUserId(user_url))
+
+	// if page is private and not logged in
+	if !page.Public && !loggedIn {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return false
+
+		// if page is private and logged in user is not owner
+	} else if !page.Public && loggedIn_id != util.GetUserId(user_url) {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return false
+	}
+
 	// get trailing url after user's url
 	restOfUrl := strings.SplitAfter(url, "/"+user_url)[1]
 	if restOfUrl == "" {

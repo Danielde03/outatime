@@ -1,7 +1,5 @@
 loginout.js
 
-pageHanderls.go
-
 dataacess.go
 
 formHandlers.go
