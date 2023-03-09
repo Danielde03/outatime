@@ -11,7 +11,7 @@ function submitForm(url) {
 
     // set token value
     let tokenValue = Math.random() * 10_000;
-    document.cookie = "token=" + tokenValue;
+    document.cookie = "token=" + tokenValue + "; path=/";
     let token = document.querySelector("#token");
     token.value = tokenValue;
 
