@@ -40,14 +40,11 @@ func routeDynamicURL(url string, user_url string, res http.ResponseWriter, req *
 	loggedIn, loggedIn_id := util.IsLoggedIn(req)
 	page := *util.GetUserPage(util.GetUserId(user_url))
 
-	// if page is private and not logged in
-	if !page.Public && !loggedIn {
+	// if page is private and not logged in OR if page is private and logged in user is not owner
+	if (!page.Public && !loggedIn) || (!page.Public && loggedIn_id != util.GetUserId(user_url)) {
 		http.Redirect(res, req, "/", http.StatusSeeOther)
 		return false
 
-		// if page is private and logged in user is not owner
-	} else if !page.Public && loggedIn_id != util.GetUserId(user_url) {
-		util.RedirectToUser(res, req)
 	}
 
 	// get trailing url after user's url
