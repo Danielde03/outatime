@@ -41,6 +41,15 @@ function signupPrompt() {
     username.setAttribute("placeholder", "Username");
     form.appendChild(username);
 
+    // url input
+    let url = document.createElement("input");
+    url.id = "url-input";
+    url.setAttribute("name", "url");
+    url.setAttribute("type", "text");
+    url.setAttribute("required", "");
+    url.setAttribute("placeholder", "URL");
+    form.appendChild(url);
+
     // password input
     let password = document.createElement("input");
     password.id = "password-input";

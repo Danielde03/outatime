@@ -1,11 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"net/http"
 	"os"
 	"outatime/util"
-	"strings"
 )
 
 // time a user will stay logged in (seconds)
@@ -126,6 +124,7 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 	email := req.FormValue("email")
 	password := req.FormValue("password")
 	username := req.FormValue("username")
+	url := req.FormValue("url")
 	token := req.FormValue("token")
 
 	tokenCookie, err := req.Cookie("token")
@@ -156,16 +155,10 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// make url - ensure is unique TODO: add more replace functions based on validation
-	url := username
-	url = strings.ReplaceAll(url, " ", "")
-	url = strings.ReplaceAll(url, "?", "")
-
-	i := 1
-
-	for !util.IsUnique(url, "user_url", "user") {
-		url += fmt.Sprintf("%d", i)
-		i++
+	// ensure URL is unique - if not, return error
+	if !util.IsUnique(url, "user_url", "user") {
+		http.Error(res, "URL is already in use", 500)
+		return
 	}
 
 	// make auth_code and validate_code - if non unique error is returned, remake codes and reinsert account
