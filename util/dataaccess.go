@@ -54,7 +54,6 @@ func IsUnique(value string, field string, table string) bool {
 	rows, err := DatabaseExecute(fmt.Sprintf("SELECT \"%v\" FROM outatime.\"%v\" WHERE \"%v\" = $1", field, table, field), value)
 
 	if err != nil {
-		fmt.Println(err.Error())
 		LogError(err, "database")
 		LogError(errors.New("IsUnique() : database error"), "util")
 	}
