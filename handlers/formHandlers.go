@@ -195,3 +195,5 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 	http.Error(res, "Account made", http.StatusCreated)
 
 }
+
+// TODO: make auth_code null when logged out and make new one when logged in, so can't be guessed.
