@@ -19,7 +19,7 @@ CREATE SCHEMA IF NOT EXISTS "outatime";
 
 CREATE TABLE IF NOT EXISTS "outatime"."user" (
     "user_id"       SERIAL          PRIMARY KEY,
-    "user_name"     VARCHAR(30)     NOT NULL,
+    "user_name"     VARCHAR(50)     NOT NULL,
     "user_url"      VARCHAR(30)     NOT NULL    UNIQUE,
     "user_email"    VARCHAR(100)    NOT NULL    UNIQUE,
     "user_password" VARCHAR(100)    NOT NULL,
@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS "outatime"."event" (
     "event_id"      SERIAL          PRIMARY KEY,
     "user_id"       INT             NOT NULL,
     FOREIGN KEY     ("user_id")     REFERENCES "outatime"."user"("user_id"),
+    "event_name"    VARCHAR(50)     NOT NULL,
     "isPublic"      BOOLEAN         NOT NULL    DEFAULT FALSE,
     "event_tldr"    VARCHAR(200)    NOT NULL,
     "event_descr"   VARCHAR(2048)   NOT NULL,
