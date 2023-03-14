@@ -21,8 +21,10 @@ const (
 
 // execute command to database
 //
-// Return rows and error if one is thrown
-func DatabaseExecute(command string) (*sql.Rows, error) {
+// return rows and error if one is thrown
+//
+// args can only be used for values, not fields
+func DatabaseExecute(command string, args ...any) (*sql.Rows, error) {
 
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		host, port, user, password, dbname)
@@ -34,13 +36,12 @@ func DatabaseExecute(command string) (*sql.Rows, error) {
 	}
 
 	// execute query and get results
-	results, err := db.Query(command)
+	results, err := db.Query(command, args...)
 
 	if err != nil {
 		return nil, err
 	}
 
-	// defer moves it to end of function - will happen last
 	defer db.Close()
 
 	return results, nil
@@ -50,9 +51,10 @@ func DatabaseExecute(command string) (*sql.Rows, error) {
 // Check if a value is unique in a table
 func IsUnique(value string, field string, table string) bool {
 
-	rows, err := DatabaseExecute("SELECT " + field + " FROM outatime." + table + " WHERE " + field + " = '" + value + "'")
+	rows, err := DatabaseExecute(fmt.Sprintf("SELECT \"%v\" FROM outatime.\"%v\" WHERE \"%v\" = $1", field, table, field), value)
 
 	if err != nil {
+		fmt.Println(err.Error())
 		LogError(err, "database")
 		LogError(errors.New("IsUnique() : database error"), "util")
 	}

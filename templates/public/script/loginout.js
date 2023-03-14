@@ -16,7 +16,7 @@ function submitForm(url) {
     token.value = tokenValue;
 
     // TODO: check input values - check username in backend, but email and password can both be done here, or maybe just do all in backend (password must be checked here)
-    
+    // TODO: in checking inputs, make sure can't be too long
 
     // Send login form
     var xhr = new XMLHttpRequest();

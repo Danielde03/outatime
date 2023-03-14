@@ -113,7 +113,7 @@ func checkForDynamicRoutes(res http.ResponseWriter, req *http.Request) bool {
 		user_url := split_url[0]
 
 		// see if url is in database
-		rows, err := util.DatabaseExecute("SELECT user_id FROM outatime.user WHERE user_url = '" + user_url + "';")
+		rows, err := util.DatabaseExecute("SELECT user_id FROM outatime.user WHERE user_url = $1;", user_url)
 
 		if err != nil {
 			util.LogError(err, "database")

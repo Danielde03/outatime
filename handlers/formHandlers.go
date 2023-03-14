@@ -51,7 +51,7 @@ func Login(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		rows, err := util.DatabaseExecute("SELECT user_id, auth_code FROM outatime.user WHERE user_email = '" + email + "' AND user_password = '" + password + "';")
+		rows, err := util.DatabaseExecute("SELECT user_id, auth_code FROM outatime.user WHERE user_email = $1 AND user_password = $2;", email, password)
 
 		if err != nil {
 			util.LogError(err, "database")
@@ -176,18 +176,20 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// add to database TODO: take out isActive and isValid
+	_, err = util.DatabaseExecute("INSERT INTO outatime.\"user\"(user_name, user_url, user_email, user_password, auth_code, user_avatar, validate_code, \"isValid\", \"isActive\") VALUES ($1, $2, $3, $4, $5, ' ', $6, true, true)", username, url, email, password, auth_code, validation_code)
+	if err != nil {
+		util.LogError(err, "database")
+		http.Error(res, "Database error", 500)
+		return
+	}
+
 	// make file in images. TODO: make happen after account is verified.
 	err = os.Mkdir("./templates/public/images/"+url, 0655)
 	if err != nil {
 		util.LogError(err, "files")
 		http.Error(res, "Error making image file", 500)
 		return
-	}
-
-	// add to database TODO: take out isActive and isValid
-	_, err = util.DatabaseExecute("INSERT INTO outatime.\"user\"(user_name, user_url, user_email, user_password, auth_code, user_avatar, validate_code, \"isValid\", \"isActive\") VALUES ('" + username + "', '" + url + "', '" + email + "', '" + password + "', '" + auth_code + "', ' ', '" + validation_code + "', true, true)")
-	if err != nil {
-		util.LogError(err, "database")
 	}
 
 	http.Error(res, "Account made", http.StatusCreated)

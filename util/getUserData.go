@@ -26,7 +26,7 @@ func IsLoggedIn(req *http.Request) (bool, string) {
 // Empty URL means no user at that ID
 func GetUserURL(id string) string {
 
-	rows, err := DatabaseExecute("SELECT user_url FROM outatime.user WHERE user_id = " + id + ";")
+	rows, err := DatabaseExecute("SELECT user_url FROM outatime.user WHERE user_id = $1;", id)
 
 	if err != nil {
 		LogError(err, "database")
@@ -54,7 +54,7 @@ func GetUserURL(id string) string {
 // Empty URL means no user at that ID
 func GetUserId(url string) string {
 
-	rows, err := DatabaseExecute("SELECT user_id FROM outatime.user WHERE user_url = '" + url + "';")
+	rows, err := DatabaseExecute("SELECT user_id FROM outatime.user WHERE user_url = $1;", url)
 
 	if err != nil {
 		LogError(err, "database")
@@ -80,7 +80,7 @@ func GetUserId(url string) string {
 // Get a user by ID
 func GetUserById(id string) *models.User {
 
-	rows, err := DatabaseExecute("SELECT user_name, user_url, user_avatar, \"isActive\", subscribers FROM outatime.user WHERE user_id = " + id + ";")
+	rows, err := DatabaseExecute("SELECT user_name, user_url, user_avatar, \"isActive\", subscribers FROM outatime.user WHERE user_id = $1;", id)
 
 	if err != nil {
 		LogError(err, "database")
@@ -116,7 +116,7 @@ func GetUserByUrl(url string) *models.User {
 // Get the page data of a user based on user id
 func GetUserPage(user_id string) *models.UserPage {
 
-	rows, err := DatabaseExecute("SELECT \"aboutUs\", banner, \"isPublic\" FROM outatime.user_page WHERE user_id = " + user_id + ";")
+	rows, err := DatabaseExecute("SELECT \"aboutUs\", banner, \"isPublic\" FROM outatime.user_page WHERE user_id = $1;", user_id)
 
 	if err != nil {
 		LogError(err, "database")
