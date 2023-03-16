@@ -21,6 +21,7 @@ func Login(res http.ResponseWriter, req *http.Request) {
 	// only handle post requests for login
 	if req.Method == "GET" {
 		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
 
 	} else {
 
@@ -92,17 +93,27 @@ func Login(res http.ResponseWriter, req *http.Request) {
 // Log the user out
 func Logout(res http.ResponseWriter, req *http.Request) {
 
-	// delete auth cookie
-	http.SetCookie(res, &http.Cookie{
-		Name:   "auth_code",
-		Path:   "/",
-		MaxAge: -1,
-	})
+	// only handle post requests for logout
+	if req.Method == "GET" {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
 
-	req.Header.Del("user_id")
+	} else {
 
-	// redirect to home page
-	http.Redirect(res, req, "/", http.StatusSeeOther)
+		// delete auth cookie
+		http.SetCookie(res, &http.Cookie{
+			Name:   "auth_code",
+			Path:   "/",
+			MaxAge: -1,
+		})
+
+		req.Header.Del("user_id")
+
+		// redirect to home page
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+
+	}
+
 }
 
 // Create a new account
