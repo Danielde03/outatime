@@ -52,7 +52,7 @@ func Login(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		rows, err := util.DatabaseExecute("SELECT user_id, auth_code FROM outatime.user WHERE user_email = $1 AND user_password = $2;", email, password)
+		rows, err := util.DatabaseExecute("SELECT user_id FROM outatime.user WHERE user_email = $1 AND user_password = $2;", email, password)
 
 		if err != nil {
 			util.LogError(err, "database")
@@ -62,7 +62,7 @@ func Login(res http.ResponseWriter, req *http.Request) {
 		auth_code := ""
 
 		for rows.Next() {
-			err := rows.Scan(&userId, &auth_code)
+			err := rows.Scan(&userId)
 
 			if err != nil {
 				util.LogError(err, "database")
@@ -70,8 +70,28 @@ func Login(res http.ResponseWriter, req *http.Request) {
 		}
 
 		// if no return val
-		if auth_code == "" {
+		if userId == "" {
 			http.Error(res, "Email or password is invalid", 500)
+			return
+		}
+
+		// make auth_code and validate_code - if non unique, get new auth_code
+		auth_code, err = util.RandomString(5, 5)
+
+		for !util.IsUnique(auth_code, "auth_code", "user") {
+			auth_code, err = util.RandomString(5, 5)
+		}
+
+		if err != nil {
+			util.LogError(err, "util")
+			return
+		}
+
+		// store auth_code in database
+		_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET auth_code = $1 WHERE user_id = $2", auth_code, userId)
+		if err != nil {
+			util.LogError(err, "database")
+			http.Error(res, "Database error", 500)
 			return
 		}
 
@@ -107,6 +127,15 @@ func Logout(res http.ResponseWriter, req *http.Request) {
 			MaxAge: -1,
 		})
 
+		// nullify auth_code in database
+		_, err := util.DatabaseExecute("UPDATE outatime.\"user\" SET auth_code = NULL where user_id = $1", req.Header.Get("user_id"))
+		if err != nil {
+			util.LogError(err, "database")
+			http.Error(res, "Database error", 500)
+			return
+		}
+
+		// delete from header
 		req.Header.Del("user_id")
 
 		// redirect to home page
@@ -172,14 +201,6 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// make auth_code and validate_code - if non unique error is returned, remake codes and reinsert account
-	auth_code, err := util.RandomString(5, 5)
-	if err != nil {
-		util.LogError(err, "util")
-		http.Error(res, "Error making auth_code", 500)
-		return
-	}
-
 	validation_code, err := util.RandomString(5, 5)
 	if err != nil {
 		util.LogError(err, "util")
@@ -188,7 +209,7 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// add to database TODO: take out isActive and isValid
-	_, err = util.DatabaseExecute("INSERT INTO outatime.\"user\"(user_name, user_url, user_email, user_password, auth_code, user_avatar, validate_code, \"isValid\", \"isActive\") VALUES ($1, $2, $3, $4, $5, ' ', $6, true, true)", username, url, email, password, auth_code, validation_code)
+	_, err = util.DatabaseExecute("INSERT INTO outatime.\"user\"(user_name, user_url, user_email, user_password, user_avatar, validate_code, \"isValid\", \"isActive\") VALUES ($1, $2, $3, $4, ' ', $5, true, true)", username, url, email, password, validation_code)
 	if err != nil {
 		util.LogError(err, "database")
 		http.Error(res, "Database error", 500)
@@ -206,5 +227,3 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 	http.Error(res, "Account made", http.StatusCreated)
 
 }
-
-// TODO: make auth_code null when logged out and make new one when logged in, so can't be guessed.
