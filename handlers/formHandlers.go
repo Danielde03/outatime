@@ -127,7 +127,7 @@ func Logout(res http.ResponseWriter, req *http.Request) {
 			MaxAge: -1,
 		})
 
-		// nullify auth_code in database
+		// nullify auth_code in database TODO: nullify when cookie dies
 		_, err := util.DatabaseExecute("UPDATE outatime.\"user\" SET auth_code = NULL where user_id = $1", req.Header.Get("user_id"))
 		if err != nil {
 			util.LogError(err, "database")
