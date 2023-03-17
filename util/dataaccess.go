@@ -11,13 +11,10 @@ import (
 const (
 	host     = "localhost"
 	port     = 5432
-	user     = "postgres"
-	password = "@dm1n"
+	user     = "app"
+	password = "0u1Ot1m3"
 	dbname   = "outatime"
 )
-
-// TODO: get rid of concatination for queries
-// TODO: set up new account on DB for the app to use, not "postgres @dm1n"
 
 // execute command to database
 //
