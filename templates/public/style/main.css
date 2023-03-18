@@ -96,3 +96,13 @@ header {
 #body {
     width: var(--content-width);
 }
+
+#banner {
+    width: var(--content-width);
+    height: 150px;
+    
+    /* background-color: var(--main-color); */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
