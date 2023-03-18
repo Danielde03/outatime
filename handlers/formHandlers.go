@@ -227,3 +227,21 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 	http.Error(res, "Account made", http.StatusCreated)
 
 }
+
+// Update a user's page based on form input
+func UpdatePage(res http.ResponseWriter, req *http.Request) {
+
+	if req.Method == "GET" {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	// check user is logged in -extra level of security
+
+	// validate data
+
+	// if image is new, add image to file
+
+	// add data to DB where user = logged in user's ID.
+
+}

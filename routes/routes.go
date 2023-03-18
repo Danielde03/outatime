@@ -22,6 +22,7 @@ func GetRoutes() *http.ServeMux {
 	mux.HandleFunc("/login", handlers.Login)
 	mux.HandleFunc("/logout", handlers.Logout)
 	mux.HandleFunc("/signup", handlers.SignUp)
+	mux.HandleFunc("/update-page", handlers.UpdatePage)
 
 	// page routes
 
