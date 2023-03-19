@@ -4,21 +4,22 @@
 <div id="body">
     <h1>Edit: <i>"{{.PageUser.Name}}"</i> Page</h1>
 
-    <form onsubmit="return updatePage()" id="updateForm">
+    <form onsubmit="return updatePage()" id="updateForm" id="updateForm">
 
-        <label>About: <br><textarea name="about" rows="4" cols="50" maxlength="2048">{{.UserPage.About}}</textarea></label><br>
+        <label>Add a New Page Banner: <input name="banner" type="file" value="{{.UserPage.Banner}}" accept="image/*"></label><br>
+        
+        <label>About Us: <br><textarea name="about" rows="43" cols="100" maxlength="5000" placeholder="Add a description of your events and your organization here...">{{.UserPage.About}}</textarea></label><br>
 
-        <label><input name="banner" type="file" value="{{.UserPage.Banner}}" accept="image/*"></label><br>
         <label>Public: 
         
             {{if .UserPage.Public}}
-                <input name="isPublic" type="checkbox" checked>
+                <input name="isPublic" type="checkbox" style="margin-top: 30px;" checked>
             {{else}}
-                <input name="isPublic" type="checkbox">
+                <input name="isPublic" type="checkbox" style="margin-top: 30px;">
             {{end}}
         </label><br>
 
-        <input type="submit" value="Update Page">
+        <input type="submit" value="Update Page" >
     </form>
 
     

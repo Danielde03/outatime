@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS "outatime"."user_page" (
     "page_id"       SERIAL          PRIMARY KEY,
     "user_id"       INT             NOT NULL,
     FOREIGN KEY     ("user_id")     REFERENCES "outatime"."user"("user_id"),
-    "aboutUs"       VARCHAR(2048),
+    "aboutUs"       VARCHAR(5000),
     "banner"        VARCHAR(1024),
     "isPublic"      BOOLEAN         NOT NULL    DEFAULT FALSE
 );

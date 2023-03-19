@@ -11,6 +11,7 @@
     --link-color: rgb(33,99,232);
     --content-width: 60vw;
     --header-height: 51px;
+    --input-padding: 20px;
 }
 
 * {
@@ -95,6 +96,8 @@ header {
 
 #body {
     width: var(--content-width);
+    overflow-x: hidden;
+    padding-bottom: 100px;
 }
 
 #banner {
@@ -105,4 +108,15 @@ header {
     background-repeat: no-repeat;
     background-position: center;
     background-size: contain;
+}
+
+
+#updateForm > label > input, #updateForm > label > textarea  {
+    margin-bottom: var(--input-padding);
+    
+}
+
+textarea {
+    width: var(--content-width);
+    resize: vertical;
 }
