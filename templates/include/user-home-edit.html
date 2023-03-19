@@ -2,13 +2,15 @@
 
 {{define "body"}}
 <div id="body">
-    <h1>Edit: <i>"{{.PageUser.Name}}"</i> Page</h1>
+    <h1>Edit Home Page: <i>"{{.PageUser.Name}}"</i></h1>
 
-    <form onsubmit="return updatePage()" id="updateForm" id="updateForm">
+    <form onsubmit="return updatePage('/update-page')" id="updateForm" id="updateForm">
 
         <label>Add a New Page Banner: <input name="banner" type="file" value="{{.UserPage.Banner}}" accept="image/*"></label><br>
         
         <label>About Us: <br><textarea name="about" rows="43" cols="100" maxlength="5000" placeholder="Add a description of your events and your organization here...">{{.UserPage.About}}</textarea></label><br>
+
+        <input id="token" name="token" type="hidden" required value=" ">
 
         <label>Public: 
         

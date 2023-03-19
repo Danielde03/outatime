@@ -236,7 +236,14 @@ func UpdatePage(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// test responce.
+	http.Error(res, "Recieving...", 500)
+
 	// check user is logged in -extra level of security
+
+	// get form data
+
+	// check token
 
 	// validate data
 

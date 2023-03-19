@@ -1,6 +1,7 @@
 /**
  * Submit the form
  * Check input
+ * @param url destination of request
  */
 function submitForm(url) {
     
