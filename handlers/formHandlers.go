@@ -301,7 +301,7 @@ func UpdatePage(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-	} else { // if file is added
+	} else { // if file is added TODO: remove old image from files.
 
 		defer imageFile.Close()
 		banner = handler.Filename
