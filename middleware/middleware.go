@@ -21,6 +21,12 @@ func CheckAuth(next http.Handler) http.Handler {
 		// if logged in, get ID and put in req Header
 		auth_code := auth_code_cookie.Value
 
+		// stop users from writing value of null in cookie
+		if auth_code == "null" {
+			next.ServeHTTP(res, req)
+			return
+		}
+
 		// get user id from database based on auth_code
 		rows, err := util.DatabaseExecute("SELECT user_id FROM outatime.user WHERE auth_code = $1;", auth_code)
 
