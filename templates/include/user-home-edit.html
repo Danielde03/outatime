@@ -6,7 +6,7 @@
 
     <form onsubmit="return updatePage('/update-page')" id="updateForm" id="updateForm">
 
-        <label>Add a New Page Banner: <input name="banner" type="file" value="{{.UserPage.Banner}}" accept="image/*"></label><br>
+        <label>Add a New Page Banner: <input name="banner" type="file" accept="image/*"></label><br>
         
         <label>About Us: <br><textarea name="about" rows="43" cols="100" maxlength="5000" placeholder="Add a description of your events and your organization here...">{{.UserPage.About}}</textarea></label><br>
 
@@ -15,12 +15,13 @@
         <label>Public: 
         
             {{if .UserPage.Public}}
-                <input name="isPublic" type="checkbox" style="margin-top: 30px;" checked>
+                <input id="isPublic" name="isPublic" type="checkbox" style="margin-top: 30px;" checked>
             {{else}}
-                <input name="isPublic" type="checkbox" style="margin-top: 30px;">
+                <input id="isPublic" name="isPublic" type="checkbox" style="margin-top: 30px;">
             {{end}}
         </label><br>
 
+        <p id="message"></p>
         <input type="submit" value="Update Page" >
     </form>
 

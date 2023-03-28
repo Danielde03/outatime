@@ -14,6 +14,10 @@ function updatePage(url) {
     let token = document.querySelector("#token");
     token.value = tokenValue;
 
+    // set value of isPublic
+    let isPublic = document.querySelector("#isPublic");
+    isPublic.value = isPublic.checked;
+
     // send POST to /update-page
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url); 
@@ -21,14 +25,20 @@ function updatePage(url) {
 
         // if update is good
         if (xhr.status === 200) {
+            
+            let message = document.querySelector("#message");
 
+            message.style.color = "green";
+            message.innerText = "Page updated.";
           
 
             // if update is bad
         } else if (xhr.status === 500) {
 
-            // test recieving
-            alert(xhr.responseText)
+            let message = document.querySelector("#message");
+
+            message.style.color = "red";
+            message.innerText = xhr.responseText;
           
         }
     }; 

@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"io"
 	"net/http"
 	"os"
 	"outatime/util"
+	"strings"
 )
 
 // time a user will stay logged in (seconds)
@@ -47,7 +49,7 @@ func Login(res http.ResponseWriter, req *http.Request) {
 		}
 
 		// if token don't match - sign of bad intent
-		if token != tokenCookie.Value {
+		if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
 			http.Error(res, "Token does not match", 500)
 			return
 		}
@@ -236,19 +238,92 @@ func UpdatePage(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// test responce.
-	http.Error(res, "Recieving...", 500)
-
 	// check user is logged in -extra level of security
+	loggedIn, id := util.IsLoggedIn(req)
+
+	if !loggedIn {
+		http.Error(res, "No user logged in", 500)
+		return
+	}
 
 	// get form data
+	about := req.FormValue("about")
+	public := req.FormValue("isPublic")
 
-	// check token
+	// get token data
+	token := req.FormValue("token")
+	tokenCookie, err := req.Cookie("token")
 
-	// validate data
+	// remove token cookie
+	http.SetCookie(res, &http.Cookie{
+		Name:   "token",
+		Path:   "/",
+		MaxAge: -1,
+	})
+
+	// if no token - sign of bad intent
+	if err != nil {
+		util.LogError(err, "cookies")
+		http.Error(res, "Token cookie not found", 500)
+		return
+	}
+
+	// if token don't match - sign of bad intent
+	if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
+		http.Error(res, "Token does not match", 500)
+		return
+	}
+
+	// TODO: validate data
 
 	// if image is new, add image to file
 
-	// add data to DB where user = logged in user's ID.
+	req.ParseMultipartForm(32 << 20)
+	imageFile, handler, err := req.FormFile("banner")
+
+	// don't worry about "no such file" errors
+	if err != nil && err.Error() != "http: no such file" {
+		util.LogError(err, "files")
+		http.Error(res, "Image error", 500)
+		return
+	}
+
+	banner := ""
+
+	// if no file added
+	if err != nil && err.Error() == "http: no such file" {
+
+		// update user without new banner
+		_, err = util.DatabaseExecute("UPDATE outatime.user_page SET \"aboutUs\"=$1, \"isPublic\"=$2 WHERE user_id=$3;", about, public == "true", id)
+		if err != nil {
+			util.LogError(err, "database")
+			http.Error(res, "Database error", 500)
+			return
+		}
+
+	} else { // if file is added
+
+		defer imageFile.Close()
+		banner = handler.Filename
+		file, err := os.OpenFile("./templates/public/images/"+util.GetUserById(id).Url+"/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+
+		if err != nil {
+			util.LogError(err, "files")
+			http.Error(res, "Image file creation error", 500)
+			return
+		}
+		defer file.Close()
+
+		io.Copy(file, imageFile)
+
+		// update user with new banner
+		_, err = util.DatabaseExecute("UPDATE outatime.user_page SET \"aboutUs\"=$1, banner=$2, \"isPublic\"=$3 WHERE user_id=$4;", about, banner, public == "true", id)
+		if err != nil {
+			util.LogError(err, "database")
+			http.Error(res, "Database error", 500)
+			return
+		}
+
+	}
 
 }
