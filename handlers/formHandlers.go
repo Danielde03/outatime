@@ -301,8 +301,9 @@ func UpdatePage(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-	} else { // if file is added TODO: remove old image from files.
+	} else { // if file is added
 
+		// make file
 		defer imageFile.Close()
 		banner = handler.Filename
 		file, err := os.OpenFile("./templates/public/images/"+util.GetUserById(id).Url+"/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
@@ -314,7 +315,16 @@ func UpdatePage(res http.ResponseWriter, req *http.Request) {
 		}
 		defer file.Close()
 
+		// put image into new file
 		io.Copy(file, imageFile)
+
+		// delete old image file
+		os.Remove("./templates/public/images/" + util.GetUserById(id).Url + "/" + util.GetUserPage(id).Banner)
+		if err != nil {
+			util.LogError(err, "files")
+			http.Error(res, "Image file deletion error", 500)
+			return
+		}
 
 		// update user with new banner
 		_, err = util.DatabaseExecute("UPDATE outatime.user_page SET \"aboutUs\"=$1, banner=$2, \"isPublic\"=$3 WHERE user_id=$4;", about, banner, public == "true", id)
