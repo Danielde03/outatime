@@ -118,6 +118,7 @@ func checkForDynamicRoutes(res http.ResponseWriter, req *http.Request) bool {
 
 		if err != nil {
 			util.LogError(err, "database")
+			return false
 		}
 
 		count := 0

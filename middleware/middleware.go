@@ -32,6 +32,8 @@ func CheckAuth(next http.Handler) http.Handler {
 
 		if err != nil {
 			util.LogError(err, "database")
+			next.ServeHTTP(res, req)
+			return
 		}
 
 		var id string
@@ -41,6 +43,8 @@ func CheckAuth(next http.Handler) http.Handler {
 
 			if err != nil {
 				util.LogError(err, "database")
+				next.ServeHTTP(res, req)
+				return
 			}
 		}
 
