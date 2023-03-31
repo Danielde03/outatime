@@ -10,4 +10,7 @@ type PageData struct {
 
 	// User page data
 	UserPage UserPage
+
+	// list of users
+	HostList []User
 }

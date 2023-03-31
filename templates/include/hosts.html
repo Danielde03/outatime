@@ -1,0 +1,10 @@
+{{/* The home page to be displayed on URL /hosts */}}
+
+{{define "body"}}
+<div id="body">
+    <h1>Hosts</h1>
+    {{range .HostList}}
+        <p><a href="/{{.Url}}">{{.Name}}</a></p>
+    {{end}}
+</div>
+{{end}}

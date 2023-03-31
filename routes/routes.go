@@ -27,6 +27,7 @@ func GetRoutes() *http.ServeMux {
 	// page routes
 
 	// check if dynamic, 404 or root
+	mux.HandleFunc("/hosts", handlers.Hosts)
 	mux.HandleFunc("/", rootOr404)
 
 	return mux
