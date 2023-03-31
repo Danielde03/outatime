@@ -49,7 +49,7 @@ func GetUserURL(id string) string {
 
 }
 
-// Get a user's URL based on the ID
+// Get a user's ID based on the URL
 //
 // Empty URL means no user at that ID
 func GetUserId(url string) string {

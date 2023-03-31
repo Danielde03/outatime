@@ -8,7 +8,7 @@
 
         <label>Add a New Page Banner: <input name="banner" type="file" accept="image/*"></label><br>
         
-        <label>About Us: <br><textarea name="about" rows="43" cols="100" maxlength="5000" placeholder="Add a description of your events and your organization here...">{{.UserPage.About}}</textarea></label><br>
+        <label>About Us: <br><textarea name="about" rows="43" cols="100" maxlength="4500" placeholder="Add a description of your events and your organization here...">{{.UserPage.About}}</textarea></label><br>
 
         <input id="token" name="token" type="hidden" required value=" ">
 
@@ -24,6 +24,8 @@
         <p id="message"></p>
         <input type="submit" value="Update Page" >
     </form>
+    <br>
+    <a href="/{{.PageUser.Url}}/live-view"><button>Public View</button></a>
 
     
 </div>

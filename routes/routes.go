@@ -59,6 +59,9 @@ func routeDynamicURL(url string, user_url string, res http.ResponseWriter, req *
 	case "/":
 		handlers.UserHome(res, req, user_url)
 		return true
+	case "/live-view":
+		handlers.UserHomeLiveView(res, req, user_url)
+		return true
 	default:
 		return false
 	}
