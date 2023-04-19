@@ -7,8 +7,15 @@ DROP TABLE IF EXISTS "outatime"."user_page";
 DROP TABLE IF EXISTS "outatime"."link";
 DROP TABLE IF EXISTS "outatime"."user";
 
--- create schema
+
+
+-- drop schema
 DROP SCHEMA IF EXISTS "outatime" CASCADE;
+
+-- Drop user
+DROP USER IF EXISTS app;
+
+
 CREATE SCHEMA IF NOT EXISTS "outatime";
 
 -- create tables
@@ -30,7 +37,8 @@ CREATE TABLE IF NOT EXISTS "outatime"."user" (
     "isActive"      BOOLEAN         NOT NULL    DEFAULT FALSE,
     "isAdmin"       BOOLEAN         NOT NULL    DEFAULT FALSE,
     "strikes"       INT             NOT NULL    DEFAULT 0,
-    "subscribers"   INT             NOT NULL    DEFAULT 0
+    "subscribers"   INT             NOT NULL    DEFAULT 0,
+    "events"        INT             NOT NULL    DEFAULT 0
 );
 
 

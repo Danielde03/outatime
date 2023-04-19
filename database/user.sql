@@ -1,6 +1,8 @@
-drop user app;
+drop user if exists app;
 
 create user app password '0u1Ot1m3';
+
+GRANT ALL ON SCHEMA outatime TO app;
 
 GRANT EXECUTE ON FUNCTION outatime.make_user_page_func() TO app;
 

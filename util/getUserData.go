@@ -80,7 +80,7 @@ func GetUserId(url string) string {
 // Get a user by ID
 func GetUserById(id string) *models.User {
 
-	rows, err := DatabaseExecute("SELECT user_name, user_url, user_avatar, \"isActive\", subscribers FROM outatime.user WHERE user_id = $1;", id)
+	rows, err := DatabaseExecute("SELECT user_name, user_url, user_avatar, \"isActive\", subscribers, events FROM outatime.user WHERE user_id = $1;", id)
 
 	if err != nil {
 		LogError(err, "database")
@@ -92,9 +92,10 @@ func GetUserById(id string) *models.User {
 	var user_avatar string
 	var user_active bool
 	var user_subs int
+	var user_events int
 
 	for rows.Next() {
-		err := rows.Scan(&user_name, &user_url, &user_avatar, &user_active, &user_subs)
+		err := rows.Scan(&user_name, &user_url, &user_avatar, &user_active, &user_subs, &user_events)
 
 		if err != nil {
 			LogError(err, "database")
@@ -102,7 +103,7 @@ func GetUserById(id string) *models.User {
 		}
 	}
 
-	return &models.User{Name: user_name, Url: user_url, Avatar: user_avatar, Active: user_active, Subs: user_subs}
+	return &models.User{Name: user_name, Url: user_url, Avatar: user_avatar, Active: user_active, Subs: user_subs, Events: user_events}
 
 }
 

@@ -40,9 +40,10 @@ func Hosts(res http.ResponseWriter, req *http.Request) {
 	var url string
 	var avatar string
 	var subs int
+	var events int
 
 	// get data
-	rows, err := util.DatabaseExecute("SELECT user_name, user_url, user_avatar, subscribers FROM outatime.\"user\" JOIN outatime.\"user_page\" ON \"user\".user_id = \"user_page\".user_id WHERE \"isActive\" = true AND \"isPublic\" = true ORDER BY subscribers DESC, user_name")
+	rows, err := util.DatabaseExecute("SELECT user_name, user_url, user_avatar, subscribers, events FROM outatime.\"user\" JOIN outatime.\"user_page\" ON \"user\".user_id = \"user_page\".user_id WHERE \"isActive\" = true AND \"isPublic\" = true ORDER BY subscribers DESC, user_name")
 
 	if err != nil {
 		util.LogError(err, "database")
@@ -50,8 +51,8 @@ func Hosts(res http.ResponseWriter, req *http.Request) {
 
 	// load data into PageData host list
 	for rows.Next() {
-		rows.Scan(&name, &url, &avatar, &subs)
-		data.HostList = append(data.HostList, models.User{Name: name, Url: url, Avatar: avatar, Subs: subs})
+		rows.Scan(&name, &url, &avatar, &subs, &events)
+		data.HostList = append(data.HostList, models.User{Name: name, Url: url, Avatar: avatar, Subs: subs, Events: events})
 	}
 
 	// render

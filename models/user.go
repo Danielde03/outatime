@@ -7,6 +7,7 @@ type User struct {
 	Avatar string
 	Active bool
 	Subs   int
+	Events int
 }
 
 type UserPage struct {
