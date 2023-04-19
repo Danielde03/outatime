@@ -211,7 +211,7 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// add to database TODO: take out isActive and isValid
-	_, err = util.DatabaseExecute("INSERT INTO outatime.\"user\"(user_name, user_url, user_email, user_password, user_avatar, validate_code, \"isValid\", \"isActive\") VALUES ($1, $2, $3, $4, ' ', $5, true, true)", username, url, email, password, validation_code)
+	_, err = util.DatabaseExecute("INSERT INTO outatime.\"user\"(user_name, user_url, user_email, user_password, user_avatar, validate_code, \"isValid\", \"isActive\") VALUES ($1, $2, $3, $4, 'avatar.png', $5, true, true)", username, url, email, password, validation_code)
 	if err != nil {
 		util.LogError(err, "database")
 		http.Error(res, "Database error", 500)
