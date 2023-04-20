@@ -1,11 +1,32 @@
-{{/* The home page to be displayed on URL /{user}/ */}}
+{{/* The accounts page to be displayed on URL /{user}/account */}}
 
 {{define "body"}}
 <div id="body">
-    <div style="display: flex; align-items: center;">
+    <div style="display: flex; align-items: center; margin-bottom: 20px;">
         <div class="avatar" style="background-image: url('/public/images/{{.PageUser.Avatar}}'); width: 70px; height: 70px;"></div>
         <h1 style="margin-left: 20px;">Edit Account: <i>"{{.PageUser.Name}}"</i></h1>
     </div>
+
+    <form onsubmit="return updateAccount('/update-account')" id="updateForm">
+
+        <label>Add a New Avatar: <input name="avatar" type="file" accept="image/*"></label><br>
+
+        <label>Change Username: <input name="user-name" type="text"></label><br>
+        <label>Change Email: <input name="email" type="email"></label><br>
+
+        <!-- Change password?
+            <label>Change Password: <input name="password" type="password"></label><br>
+         -->
+
+         <!-- Cahnge URL? Maybe not?
+            <label>Change Password: <input name="password" type="password"></label><br>
+          -->
+        
+        <input id="token" name="token" type="hidden" required value=" ">
+
+        <p id="message"></p>
+        <input type="submit" value="Update Page" >
+    </form>
     
 </div>
 {{end}}

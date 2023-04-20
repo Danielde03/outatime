@@ -47,7 +47,7 @@ function signupPrompt() {
     url.setAttribute("name", "url");
     url.setAttribute("type", "text");
     url.setAttribute("required", "");
-    url.setAttribute("placeholder", "URL");
+    url.setAttribute("placeholder", "Public URL");
     form.appendChild(url);
 
     // password input

@@ -2,7 +2,7 @@
 /**
  * Update a user's page
  * 
- * Send the request and handle responcces from the backend.
+ * Send the request and handle responces from the backend.
  * 
  * @param url destination of request
  */
@@ -45,6 +45,19 @@ function updatePage(url) {
     
     var formData = new FormData(document.getElementById("updateForm")); 
     xhr.send(formData);
+
+    return false
+}
+
+
+/**
+ * Update a user's account
+ * 
+ * Send the request and handle responces from the backend.
+ * 
+ * @param url destination of request
+ */
+function updateAccount(url) {
 
     return false
 }
