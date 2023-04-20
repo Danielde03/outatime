@@ -1,0 +1,11 @@
+{{/* The home page to be displayed on URL /{user}/ */}}
+
+{{define "body"}}
+<div id="body">
+    <div style="display: flex; align-items: center;">
+        <div class="avatar" style="background-image: url('/public/images/{{.PageUser.Avatar}}'); width: 70px; height: 70px;"></div>
+        <h1 style="margin-left: 20px;">Edit Account: <i>"{{.PageUser.Name}}"</i></h1>
+    </div>
+    
+</div>
+{{end}}

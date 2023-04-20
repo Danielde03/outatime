@@ -122,3 +122,23 @@ func UserHomeLiveView(res http.ResponseWriter, req *http.Request, user_url strin
 	util.RenderTemplate(res, "user-home", loggedIn, data)
 
 }
+
+// Handle /{{user_url}}/account
+func Account(res http.ResponseWriter, req *http.Request, user_url string) {
+
+	// Get user logged in status.
+	loggedIn, loggedIn_id := util.IsLoggedIn(req)
+	var data models.PageData
+
+	// if not logged in, or not the owner, go to root
+	if !loggedIn || (loggedIn && loggedIn_id != util.GetUserId(user_url)) {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	data.PageUser = *util.GetUserByUrl(user_url)
+	data.NavUser = *util.GetUserById(loggedIn_id)
+
+	util.RenderTemplate(res, "account", loggedIn, data)
+
+}
