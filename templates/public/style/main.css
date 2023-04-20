@@ -106,7 +106,7 @@ header {
 #banner {
     width: var(--content-width);
     height: 200px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
     
     background-repeat: no-repeat;
     background-position: center;
