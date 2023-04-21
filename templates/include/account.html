@@ -7,7 +7,7 @@
         <h1 style="margin-left: 20px;">Edit Account: <i>"{{.PageUser.Name}}"</i></h1>
     </div>
 
-    <form onsubmit="return updateAccount('/update-account')" class="updateForm" style="margin-bottom: 100px;">
+    <form onsubmit="return updateAccount('/update-account', 'updateAccount', 'account-token')" class="updateForm" id="updateAccount" style="margin-bottom: 100px;">
 
         <label>Add a New Avatar: <input name="avatar" type="file" accept="image/*"></label><br>
 
@@ -20,7 +20,7 @@
         <input type="submit" value="Update Account">
     </form>
 
-    <form onsubmit="return changePassword('/update-password')" class="updateForm">
+    <form onsubmit="return updateAccount('/update-password', 'updatePass', 'password-token')" id="updatePass" class="updateForm">
 
         <label>New Password: <input name="password" type="password"></label><br>
         <label>Repeat New Password: <input name="rep-password" type="password"></label><br>

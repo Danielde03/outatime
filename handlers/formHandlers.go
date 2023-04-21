@@ -319,7 +319,7 @@ func UpdatePage(res http.ResponseWriter, req *http.Request) {
 		io.Copy(file, imageFile)
 
 		// delete old image file
-		os.Remove("./templates/public/images/" + util.GetUserById(id).Url + "/" + util.GetUserPage(id).Banner)
+		err = os.Remove("./templates/public/images/" + util.GetUserById(id).Url + "/" + util.GetUserPage(id).Banner)
 		if err != nil {
 			util.LogError(err, "files")
 			http.Error(res, "Image file deletion error", 500)
@@ -328,6 +328,129 @@ func UpdatePage(res http.ResponseWriter, req *http.Request) {
 
 		// update user with new banner
 		_, err = util.DatabaseExecute("UPDATE outatime.user_page SET \"aboutUs\"=$1, banner=$2, \"isPublic\"=$3 WHERE user_id=$4;", about, banner, public == "true", id)
+		if err != nil {
+			util.LogError(err, "database")
+			http.Error(res, "Database error", 500)
+			return
+		}
+
+	}
+
+}
+
+// Update a user's account based on form input
+func UpdateAccount(res http.ResponseWriter, req *http.Request) {
+
+	if req.Method == "GET" {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	// check user is logged in -extra level of security
+	loggedIn, id := util.IsLoggedIn(req)
+
+	if !loggedIn {
+		http.Error(res, "No user logged in", 500)
+		return
+	}
+
+	// get token data
+	token := req.FormValue("token")
+	tokenCookie, err := req.Cookie("token")
+
+	// remove token cookie
+	http.SetCookie(res, &http.Cookie{
+		Name:   "token",
+		Path:   "/",
+		MaxAge: -1,
+	})
+
+	// if no token - sign of bad intent
+	if err != nil {
+		util.LogError(err, "cookies")
+		http.Error(res, "Token cookie not found", 500)
+		return
+	}
+
+	// if token don't match - sign of bad intent
+	if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
+		http.Error(res, "Token does not match", 500)
+		return
+	}
+
+	// Get form values
+	username := req.FormValue("user-name")
+	url := req.FormValue("user-url")
+
+	//TODO: validate data
+
+	// return error if url has changed and is not unique.
+	if url != util.GetUserURL(id) && !util.IsUnique(url, "user_url", "user") {
+		http.Error(res, "URL is taken", 500)
+		return
+	}
+
+	// get image for avatar
+	req.ParseMultipartForm(32 << 20)
+	imageFile, handler, err := req.FormFile("avatar")
+
+	// don't worry about "no such file" errors
+	if err != nil && err.Error() != "http: no such file" {
+		util.LogError(err, "files")
+		http.Error(res, "Image error", 500)
+		return
+	}
+
+	avatar := ""
+
+	// if no file added
+	if err != nil && err.Error() == "http: no such file" {
+
+		// set file to updated URL
+		os.Rename("./templates/public/images/"+util.GetUserById(id).Url, "./templates/public/images/"+url)
+
+		// update user without new avatar
+		_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_name=$1, user_url=$2 WHERE user_id=$3;", username, url, id)
+		if err != nil {
+			util.LogError(err, "database")
+			http.Error(res, "Database error", 500)
+			return
+		}
+
+	} else { // if file is added
+
+		// make file
+		defer imageFile.Close()
+		avatar = handler.Filename
+		file, err := os.OpenFile("./templates/public/images/"+util.GetUserById(id).Url+"/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+
+		if err != nil {
+			util.LogError(err, "files")
+			http.Error(res, "Image file creation error", 500)
+			return
+		}
+		defer file.Close()
+
+		// put image into new file
+		io.Copy(file, imageFile)
+
+		// delete old image file, only if not the default avatar.png
+		if util.GetUserById(id).Avatar != "avatar.png" {
+
+			err = os.Remove("./templates/public/images/" + util.GetUserById(id).Avatar)
+			if err != nil {
+				util.LogError(err, "files")
+				http.Error(res, "Image file deletion error", 500)
+				return
+			}
+
+		}
+
+		// set file to updated URL
+		os.Rename("./templates/public/images/"+util.GetUserById(id).Url, "./templates/public/images/"+url)
+
+		// update user without new avatar
+		_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_name=$1, user_url=$2, user_avatar=$3  WHERE user_id=$4;", username, url, util.GetUserById(id).Url+"/"+avatar, id)
 		if err != nil {
 			util.LogError(err, "database")
 			http.Error(res, "Database error", 500)

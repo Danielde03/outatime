@@ -43,7 +43,7 @@ function updatePage(url) {
         }
     }; 
     
-    var formData = new FormData(document.getElementById("updateForm")); 
+    var formData = new FormData(document.querySelector(".updateForm")); 
     xhr.send(formData);
 
     return false
@@ -56,20 +56,45 @@ function updatePage(url) {
  * Send the request and handle responces from the backend.
  * 
  * @param url destination of request
+ * @param formId id of the form to send
  */
-function updateAccount(url) {
+function updateAccount(url, formId, tokenId) {
 
-    return false
-}
+    // set token value
+    let tokenValue = Math.random() * 10_000;
+    document.cookie = "token=" + tokenValue + "; path=/";
+    let token = document.getElementById(tokenId);
+    token.value = tokenValue;
 
-/**
- * Update a user's password
- * 
- * Send the request and handle responces from the backend.
- * 
- * @param url destination of request
- */
-function changePassword(url) {
+    console.log("Make token");
+
+    // send POST to url
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", url); 
+    xhr.onload = function(event){ 
+
+        // if update is good
+        if (xhr.status === 200) {
+            
+            let message = document.querySelector("#message");
+
+            message.style.color = "green";
+            message.innerText = "Page updated. Reload page to see changes";
+          
+
+            // if update is bad
+        } else if (xhr.status === 500) {
+
+            let message = document.querySelector("#message");
+
+            message.style.color = "red";
+            message.innerText = xhr.responseText;
+          
+        }
+    }; 
+    
+    var formData = new FormData(document.getElementById(formId)); 
+    xhr.send(formData);
 
     return false
 }
