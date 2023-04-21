@@ -61,3 +61,15 @@ function updateAccount(url) {
 
     return false
 }
+
+/**
+ * Update a user's password
+ * 
+ * Send the request and handle responces from the backend.
+ * 
+ * @param url destination of request
+ */
+function changePassword(url) {
+
+    return false
+}

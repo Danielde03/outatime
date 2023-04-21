@@ -7,25 +7,29 @@
         <h1 style="margin-left: 20px;">Edit Account: <i>"{{.PageUser.Name}}"</i></h1>
     </div>
 
-    <form onsubmit="return updateAccount('/update-account')" id="updateForm">
+    <form onsubmit="return updateAccount('/update-account')" class="updateForm" style="margin-bottom: 100px;">
 
         <label>Add a New Avatar: <input name="avatar" type="file" accept="image/*"></label><br>
 
-        <label>Change Username: <input name="user-name" type="text"></label><br>
-        <label>Change Email: <input name="email" type="email"></label><br>
-
-        <!-- Change password?
-            <label>Change Password: <input name="password" type="password"></label><br>
-         -->
-
-         <!-- Cahnge URL? Maybe not?
-            <label>Change Password: <input name="password" type="password"></label><br>
-          -->
+        <label>Change Username: <input name="user-name" type="text" value="{{.PageUser.Name}}"></label><br>
+        <label>Change URL: <input name="user-url" type="text" value="{{.PageUser.Url}}"></label><br>
         
-        <input id="token" name="token" type="hidden" required value=" ">
+        <input id="account-token" name="token" type="hidden" required value=" ">
 
         <p id="message"></p>
-        <input type="submit" value="Update Page" >
+        <input type="submit" value="Update Account">
+    </form>
+
+    <form onsubmit="return changePassword('/update-password')" class="updateForm">
+
+        <label>New Password: <input name="password" type="password"></label><br>
+        <label>Repeat New Password: <input name="rep-password" type="password"></label><br>
+
+        <input id="password-token" name="token" type="hidden" required value=" ">
+
+        <p id="message"></p>
+        <input type="submit" value="Change Password">
+    
     </form>
     
 </div>

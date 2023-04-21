@@ -56,6 +56,7 @@ header {
     height: var(--header-height);
     z-index: 1;
     font-size: 16px;
+    white-space: nowrap;
 }
 
 #nav {
@@ -130,7 +131,7 @@ header {
 }
 
 
-#updateForm > label > input, #updateForm > label > textarea  {
+.updateForm > label > input, .updateForm > label > textarea  {
     margin-bottom: var(--input-padding);
     
 }
@@ -169,6 +170,10 @@ textarea {
     margin-left: 10px;
     font-size: 20px;
     text-decoration: none;
+}
+
+.host-bar > div:last-child {
+    white-space: nowrap;
 }
 
 .sub {
