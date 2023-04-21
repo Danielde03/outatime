@@ -460,3 +460,62 @@ func UpdateAccount(res http.ResponseWriter, req *http.Request) {
 	}
 
 }
+
+// Update a users's password. Check both fields match
+func UpdatePassword(res http.ResponseWriter, req *http.Request) {
+
+	if req.Method == "GET" {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	// check user is logged in -extra level of security
+	loggedIn, id := util.IsLoggedIn(req)
+
+	if !loggedIn {
+		http.Error(res, "No user logged in", 500)
+		return
+	}
+
+	// get token data
+	token := req.FormValue("token")
+	tokenCookie, err := req.Cookie("token")
+
+	// remove token cookie
+	http.SetCookie(res, &http.Cookie{
+		Name:   "token",
+		Path:   "/",
+		MaxAge: -1,
+	})
+
+	// if no token - sign of bad intent
+	if err != nil {
+		util.LogError(err, "cookies")
+		http.Error(res, "Token cookie not found", 500)
+		return
+	}
+
+	// if token don't match - sign of bad intent
+	if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
+		http.Error(res, "Token does not match", 500)
+		return
+	}
+
+	// get form data
+	password := req.FormValue("password")
+	repeat := req.FormValue("rep-password")
+
+	if password != repeat {
+		http.Error(res, "Password values don't match", 500)
+		return
+	}
+
+	// update user without new avatar
+	_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_password=$1 WHERE user_id=$2;", password, id)
+	if err != nil {
+		util.LogError(err, "database")
+		http.Error(res, "Database error", 500)
+		return
+	}
+
+}

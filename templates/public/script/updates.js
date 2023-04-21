@@ -66,7 +66,16 @@ function updateAccount(url, formId, tokenId) {
     let token = document.getElementById(tokenId);
     token.value = tokenValue;
 
-    console.log("Make token");
+    // if updating password
+    if (formId === "updatePass") {
+        let pass = document.getElementById("password");
+        let rep = document.getElementById("rep-password");
+
+        // hash both values
+        pass.value = hash(pass.value)
+        rep.value = hash(rep.value)
+
+    }
 
     // send POST to url
     var xhr = new XMLHttpRequest();
@@ -76,7 +85,12 @@ function updateAccount(url, formId, tokenId) {
         // if update is good
         if (xhr.status === 200) {
             
-            let message = document.querySelector("#message");
+            let message = document.querySelector("#"+formId+"> #message");
+
+            // clear password inputs
+            [...document.querySelectorAll("#updatePass > label > input")].forEach(e => {
+                e.value = "";
+            })
 
             message.style.color = "green";
             message.innerText = "Page updated. Reload page to see changes";
@@ -85,7 +99,12 @@ function updateAccount(url, formId, tokenId) {
             // if update is bad
         } else if (xhr.status === 500) {
 
-            let message = document.querySelector("#message");
+            let message = document.querySelector("#"+formId+"> #message");
+
+            // clear password inputs
+            [...document.querySelectorAll("#updatePass > label > input")].forEach(e => {
+                e.value = "";
+            })
 
             message.style.color = "red";
             message.innerText = xhr.responseText;

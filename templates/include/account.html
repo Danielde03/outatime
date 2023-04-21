@@ -17,18 +17,18 @@
         <input id="account-token" name="token" type="hidden" required value=" ">
 
         <p id="message"></p>
-        <input type="submit" value="Update Account">
+        <button type="submit">Update Account</button>
     </form>
 
     <form onsubmit="return updateAccount('/update-password', 'updatePass', 'password-token')" id="updatePass" class="updateForm">
 
-        <label>New Password: <input name="password" type="password"></label><br>
-        <label>Repeat New Password: <input name="rep-password" type="password"></label><br>
+        <label>New Password: <input id="password" name="password" type="password"></label><br>
+        <label>Repeat New Password: <input id="rep-password" name="rep-password" type="password"></label><br>
 
         <input id="password-token" name="token" type="hidden" required value=" ">
 
         <p id="message"></p>
-        <input type="submit" value="Change Password">
+        <button type="submit">Change Password</button>
     
     </form>
     
