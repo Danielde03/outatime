@@ -188,6 +188,6 @@ textarea {
 }
 
 #search {
-    /* display: flex;
-    align-content: center; */
+    display: flex;
+    align-items: center;
 }
