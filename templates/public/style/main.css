@@ -181,3 +181,13 @@ textarea {
     font-variant: small-caps;
     text-decoration: underline;
 }
+
+#host-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+#search {
+    /* display: flex;
+    align-content: center; */
+}

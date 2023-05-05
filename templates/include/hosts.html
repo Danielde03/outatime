@@ -2,7 +2,13 @@
 
 {{define "body"}}
 <div id="body">
-    <h1>Hosts</h1>
+    <div id="host-header">
+        <h1>Hosts</h1>
+        <div id="search">
+            <input type="text" id="search-field">
+            <button>Search</button>
+        </div>
+    </div>
     {{range .HostList}}
         <a href="/{{.Url}}">
             <div class="host-bar">
@@ -18,4 +24,24 @@
         </a>
     {{end}}
 </div>
+<script>
+    let button = document.querySelector("#search > button");
+    let field = document.querySelector("#search-field")
+    let hosts = [...document.querySelectorAll(".host-bar")]
+    button.addEventListener("click", () => {
+        hosts.forEach(h => {
+            // console.log(h.querySelector("div > p").innerText)
+            if (!h.querySelector("div > p").innerText.toLowerCase().includes(field.value.toLowerCase())) {
+                h.style.display = "none"
+            } else {
+                h.style.display = "flex"
+            }
+        })
+    })
+    field.addEventListener("keypress", e => {
+        if (e.key === "Enter") {
+            button.click()
+        }
+    })
+</script>
 {{end}}
