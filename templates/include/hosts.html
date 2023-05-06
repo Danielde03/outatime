@@ -23,20 +23,36 @@
             </div>
         </a>
     {{end}}
+    <p id="none-found" style="display: none;">No matching hosts found</p>
 </div>
 <script>
     let button = document.querySelector("#search > button");
     let field = document.querySelector("#search-field")
     let hosts = [...document.querySelectorAll(".host-bar")]
     button.addEventListener("click", () => {
+
+        // make var to count hosts being hidden. If all are hidden, no matches have been found.
+        let hiddenCount = 0;
+
         hosts.forEach(h => {
-            // console.log(h.querySelector("div > p").innerText)
+
+            // loop through all host elements
             if (!h.querySelector("div > p").innerText.toLowerCase().includes(field.value.toLowerCase())) {
                 h.style.display = "none"
+                hiddenCount++;
             } else {
                 h.style.display = "flex"
             }
+
+            
         })
+
+        // if hiddenCount = hosts length, none found.
+        if (hiddenCount === hosts.length) {
+            document.querySelector("#none-found").style.display = "block";
+        } else {
+            document.querySelector("#none-found").style.display = "none";
+        }
     })
     field.addEventListener("keypress", e => {
         if (e.key === "Enter") {
