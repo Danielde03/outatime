@@ -406,8 +406,10 @@ func UpdateAccount(res http.ResponseWriter, req *http.Request) {
 	// if no file added
 	if err != nil && err.Error() == "http: no such file" {
 
-		// set file to updated URL
+		// set image directory to updated URL
 		os.Rename("./templates/public/images/"+util.GetUserById(id).Url, "./templates/public/images/"+url)
+
+		// TODO: update URL in image string
 
 		// update user without new avatar
 		_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_name=$1, user_url=$2 WHERE user_id=$3;", username, url, id)
@@ -418,21 +420,6 @@ func UpdateAccount(res http.ResponseWriter, req *http.Request) {
 		}
 
 	} else { // if file is added
-
-		// make file
-		defer imageFile.Close()
-		avatar = handler.Filename
-		file, err := os.OpenFile("./templates/public/images/"+util.GetUserById(id).Url+"/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
-
-		if err != nil {
-			util.LogError(err, "files")
-			http.Error(res, "Image file creation error", 500)
-			return
-		}
-		defer file.Close()
-
-		// put image into new file
-		io.Copy(file, imageFile)
 
 		// delete old image file, only if not the default avatar.png
 		if util.GetUserById(id).Avatar != "avatar.png" {
@@ -446,11 +433,26 @@ func UpdateAccount(res http.ResponseWriter, req *http.Request) {
 
 		}
 
-		// set file to updated URL
+		// set image directory name to updated URL
 		os.Rename("./templates/public/images/"+util.GetUserById(id).Url, "./templates/public/images/"+url)
 
-		// update user without new avatar
-		_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_name=$1, user_url=$2, user_avatar=$3  WHERE user_id=$4;", username, url, util.GetUserById(id).Url+"/"+avatar, id)
+		// make image file based on new URL
+		defer imageFile.Close()
+		avatar = handler.Filename
+		file, err := os.OpenFile("./templates/public/images/"+url+"/"+handler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+
+		if err != nil {
+			util.LogError(err, "files")
+			http.Error(res, "Image file creation error", 500)
+			return
+		}
+		defer file.Close()
+
+		// put input image content into new image file
+		io.Copy(file, imageFile)
+
+		// update user with new avatar
+		_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_name=$1, user_url=$2, user_avatar=$3  WHERE user_id=$4;", username, url, url+"/"+avatar, id)
 		if err != nil {
 			util.LogError(err, "database")
 			http.Error(res, "Database error", 500)
