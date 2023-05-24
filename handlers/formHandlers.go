@@ -410,10 +410,11 @@ func UpdateAccount(res http.ResponseWriter, req *http.Request) {
 		// set image directory to updated URL
 		os.Rename("./templates/public/images/"+util.GetUserById(id).Url, "./templates/public/images/"+url)
 
-		// TODO: update URL in image string
+		// update URL in image string
+		newAvatarString := strings.Replace(util.GetUserById(id).Avatar, util.GetUserById(id).Url, url, 1)
 
 		// update user without new avatar
-		_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_name=$1, user_url=$2 WHERE user_id=$3;", username, url, id)
+		_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_name=$1, user_url=$2, user_avatar=$3 WHERE user_id=$4;", username, url, newAvatarString, id)
 		if err != nil {
 			util.LogError(err, "database")
 			util.LogError(errors.New("URL in files and DB is out of sync. File: "+url+". DB: "+util.GetUserById(id).Url), "database")
