@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"os"
@@ -415,8 +416,10 @@ func UpdateAccount(res http.ResponseWriter, req *http.Request) {
 		_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_name=$1, user_url=$2 WHERE user_id=$3;", username, url, id)
 		if err != nil {
 			util.LogError(err, "database")
+			util.LogError(errors.New("URL in files and DB is out of sync. File: "+url+". DB: "+util.GetUserById(id).Url), "database")
+			util.LogError(errors.New("URL in files and DB is out of sync. File: "+url+". DB: "+util.GetUserById(id).Url), "files")
 			http.Error(res, "Database error", 500)
-			return
+			panic("URL in files and DB is out of sync. File: " + url + ". DB: " + util.GetUserById(id).Url) // if URL and DB out of sync, end routine
 		}
 
 	} else { // if file is added
@@ -455,8 +458,10 @@ func UpdateAccount(res http.ResponseWriter, req *http.Request) {
 		_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_name=$1, user_url=$2, user_avatar=$3  WHERE user_id=$4;", username, url, url+"/"+avatar, id)
 		if err != nil {
 			util.LogError(err, "database")
+			util.LogError(errors.New("URL in files and DB is out of sync. File: "+url+". DB: "+util.GetUserById(id).Url), "database")
+			util.LogError(errors.New("URL in files and DB is out of sync. File: "+url+". DB: "+util.GetUserById(id).Url), "files")
 			http.Error(res, "Database error", 500)
-			return
+			panic("URL in files and DB is out of sync. File: " + url + ". DB: " + util.GetUserById(id).Url) // if URL and DB out of sync, end routine
 		}
 
 	}
