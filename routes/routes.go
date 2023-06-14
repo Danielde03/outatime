@@ -68,6 +68,9 @@ func routeDynamicURL(url string, user_url string, res http.ResponseWriter, req *
 	case "/account":
 		handlers.Account(res, req, user_url)
 		return true
+	case "/events":
+		handlers.Events(res, req, user_url)
+		return true
 	default:
 		return false
 	}

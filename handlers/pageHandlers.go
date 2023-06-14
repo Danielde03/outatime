@@ -142,3 +142,74 @@ func Account(res http.ResponseWriter, req *http.Request, user_url string) {
 	util.RenderTemplate(res, "account", loggedIn, data)
 
 }
+
+// Handle /{{user_url}}/events
+func Events(res http.ResponseWriter, req *http.Request, user_url string) {
+
+	// Get user logged in status.
+	loggedIn, loggedIn_id := util.IsLoggedIn(req)
+	var data models.PageData
+
+	data.PageUser = *util.GetUserByUrl(user_url)
+	data.UserPage = *util.GetUserPage(util.GetUserId(user_url))
+
+	if loggedIn {
+
+		// if logged in user's id does not match the page's user id, redirect
+		if loggedIn_id != util.GetUserId(user_url) {
+			util.RedirectToUser(res, req)
+		}
+
+		data.NavUser = *util.GetUserById(loggedIn_id)
+
+		// Get user's events
+		rows, err := util.DatabaseExecute("SELECT event_tldr, event_descr, event_start, event_end, event_location, event_img FROM outatime.event WHERE user_id=$1;", loggedIn_id)
+
+		if err != nil {
+			util.LogError(err, "database")
+		}
+
+		var tldr string
+		var descr string
+		var start string
+		var end string
+		var loc string
+		var img string
+
+		// load data into PageData host list
+		for rows.Next() {
+			rows.Scan(&tldr, &descr, &start, &end, &loc, &img)
+			data.PageUser.Event_List = append(data.PageUser.Event_List, models.Event{Tldr: tldr, Description: descr, Start: start, End: end, Location: loc, Image: img})
+		}
+
+		// if logged in to own, show editable options
+		util.RenderTemplate(res, "events-edit", loggedIn, data)
+
+	} else {
+
+		// Get public events
+		rows, err := util.DatabaseExecute("SELECT event_tldr, event_descr, event_start, event_end, event_location, event_img FROM outatime.event WHERE user_id = $1 AND \"isPublic\" = true;", util.GetUserId(user_url))
+
+		if err != nil {
+			util.LogError(err, "database")
+		}
+
+		var tldr string
+		var descr string
+		var start string
+		var end string
+		var loc string
+		var img string
+
+		// load data into PageData host list
+		for rows.Next() {
+			rows.Scan(&tldr, &descr, &start, &end, &loc, &img)
+			data.PageUser.Event_List = append(data.PageUser.Event_List, models.Event{Tldr: tldr, Description: descr, Start: start, End: end, Location: loc, Image: img})
+		}
+
+		// If viewers are accessing page, display list of user's public events
+		util.RenderTemplate(res, "events-public", loggedIn, data)
+
+	}
+
+}

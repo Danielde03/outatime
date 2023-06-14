@@ -1,0 +1,13 @@
+{{/* The home page to be displayed on URL /{user}/events when not logged in */}}
+
+{{define "body"}}
+<div id="body">
+    <h1><i>{{.PageUser.Name}}</i> Events</h1>
+    {{if not .PageUser.Event_List}}
+        <p>This user has no public events</p>
+
+    {{else}}
+        <p>Display events here</p>
+    {{end}}
+</div>
+{{end}}

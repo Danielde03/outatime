@@ -8,6 +8,7 @@
         <h1 style="margin-left: 20px;">{{.PageUser.Name}}</h1>
     </div>
     <p>Subscribers: {{.PageUser.Subs}} &nbsp;&centerdot;&nbsp; <a class="sub" href="/">Subscribe</a><br></p>
+    <p><a href="/{{.PageUser.Url}}/events" style="text-decoration: underline;">See my events</a></p>
     <p>{{.UserPage.About}}</p>
 </div>
 {{end}}
