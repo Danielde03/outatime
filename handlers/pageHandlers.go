@@ -163,23 +163,26 @@ func Events(res http.ResponseWriter, req *http.Request, user_url string) {
 		data.NavUser = *util.GetUserById(loggedIn_id)
 
 		// Get user's events
-		rows, err := util.DatabaseExecute("SELECT event_tldr, event_descr, event_start, event_end, event_location, event_img FROM outatime.event WHERE user_id=$1;", loggedIn_id)
+		rows, err := util.DatabaseExecute("SELECT event_name, event_tldr, event_descr, event_start, event_end, event_location, event_img, \"isPublic\", event_code FROM outatime.event WHERE user_id=$1;", loggedIn_id)
 
 		if err != nil {
 			util.LogError(err, "database")
 		}
 
+		var name string
 		var tldr string
 		var descr string
 		var start string
 		var end string
 		var loc string
 		var img string
+		var priv bool
+		var code string
 
 		// load data into PageData host list
 		for rows.Next() {
-			rows.Scan(&tldr, &descr, &start, &end, &loc, &img)
-			data.PageUser.Event_List = append(data.PageUser.Event_List, models.Event{Tldr: tldr, Description: descr, Start: start, End: end, Location: loc, Image: img})
+			rows.Scan(&name, &tldr, &descr, &start, &end, &loc, &img, &priv, &code)
+			data.PageUser.Event_List = append(data.PageUser.Event_List, models.Event{Name: name, Tldr: tldr, Description: descr, Start: start, End: end, Location: loc, Image: img, IsPrivate: priv, Code: code})
 		}
 
 		// if logged in to own, show editable options
@@ -188,12 +191,13 @@ func Events(res http.ResponseWriter, req *http.Request, user_url string) {
 	} else {
 
 		// Get public events
-		rows, err := util.DatabaseExecute("SELECT event_tldr, event_descr, event_start, event_end, event_location, event_img FROM outatime.event WHERE user_id = $1 AND \"isPublic\" = true;", util.GetUserId(user_url))
+		rows, err := util.DatabaseExecute("SELECT event_name, event_tldr, event_descr, event_start, event_end, event_location, event_img FROM outatime.event WHERE user_id = $1 AND \"isPublic\" = true;", util.GetUserId(user_url))
 
 		if err != nil {
 			util.LogError(err, "database")
 		}
 
+		var name string
 		var tldr string
 		var descr string
 		var start string
@@ -203,8 +207,8 @@ func Events(res http.ResponseWriter, req *http.Request, user_url string) {
 
 		// load data into PageData host list
 		for rows.Next() {
-			rows.Scan(&tldr, &descr, &start, &end, &loc, &img)
-			data.PageUser.Event_List = append(data.PageUser.Event_List, models.Event{Tldr: tldr, Description: descr, Start: start, End: end, Location: loc, Image: img})
+			rows.Scan(&name, &tldr, &descr, &start, &end, &loc, &img)
+			data.PageUser.Event_List = append(data.PageUser.Event_List, models.Event{Name: name, Tldr: tldr, Description: descr, Start: start, End: end, Location: loc, Image: img})
 		}
 
 		// If viewers are accessing page, display list of user's public events

@@ -20,10 +20,13 @@ type UserPage struct {
 
 // Hold event data from the database
 type Event struct {
+	Name        string
 	Tldr        string
 	Description string
 	Start       string
 	End         string
 	Location    string
 	Image       string
+	IsPrivate   bool
+	Code        string
 }

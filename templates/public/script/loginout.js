@@ -5,7 +5,7 @@
  */
 function submitForm(url) {
     
-  // get and has password
+  // get and hash password
     let passInput = document.querySelector("#password-input")
     let password = passInput.value;
     passInput.value = hash(password);

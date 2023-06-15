@@ -527,3 +527,47 @@ func UpdatePassword(res http.ResponseWriter, req *http.Request) {
 	}
 
 }
+
+// Create a new event based on form values
+func CreateEvent(res http.ResponseWriter, req *http.Request) {
+
+	if req.Method == "GET" {
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		return
+	}
+
+	// check user is logged in -extra level of security
+	loggedIn, _ := util.IsLoggedIn(req)
+
+	if !loggedIn {
+		http.Error(res, "No user logged in", 500)
+		return
+	}
+
+	// get token data
+	token := req.FormValue("token")
+	tokenCookie, err := req.Cookie("token")
+
+	// remove token cookie
+	http.SetCookie(res, &http.Cookie{
+		Name:   "token",
+		Path:   "/",
+		MaxAge: -1,
+	})
+
+	// if no token - sign of bad intent
+	if err != nil {
+		util.LogError(err, "cookies")
+		http.Error(res, "Token cookie not found", 500)
+		return
+	}
+
+	// if token don't match - sign of bad intent
+	if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
+		http.Error(res, "Token does not match", 500)
+		return
+	}
+
+	// get form data
+
+}

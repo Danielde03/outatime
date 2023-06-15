@@ -2,6 +2,31 @@
 
 {{define "body"}}
 <div id="body">
-    <h1>Your Events</h1>
+    <h1>Manage Your Events</h1>
+    {{if not .PageUser.Event_List}}
+        <p>You have no events</p>
+
+    {{else}}
+        <p>Display events here</p>
+    {{end}}
+
+
+    <div id="add-event" title="Create a new event" onclick="displayMaker()" style="
+        width: var(--header-height);
+        height: var(--header-height);
+        background-color: var(--link-color);
+        border-radius: 50%;
+        position: fixed;
+        z-index: 5;
+        bottom: 10vh;
+        left: calc(((100vw -  var(--content-width)) / 2) +  var(--content-width));
+        font-size: var(--header-height);
+        text-align: center;
+        padding: 0;
+        margin: auto;
+        line-height: var(--header-height);
+        cursor: pointer;
+    ">+</div>
+    <script src="/public/script/make-event.js"></script>
 </div>
 {{end}}
