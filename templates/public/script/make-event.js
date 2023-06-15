@@ -11,25 +11,26 @@ function displayMaker() {
     maker = "<h1>Make a new event</h1>";
 
     // start form
-    maker += '<form action="/create-event" method="post" onsubmit="return createEvent()">';
+    maker += '<form id="event-form" onsubmit="return makeEvent()">';
 
     // add inputs
-    maker += '<label>Event Name: <input name="name" type="text"></label><br>';
+    maker += '<label>Event Name: <input name="name" type="text" required></label><br>';
     
-    maker += '<br /><label>Start: <input name="start" type="datetime-local"></label><br>';
-    maker += '<label>End: <input name="end" type="datetime-local"></label><br>';
+    maker += '<br /><label>Start: <input name="start" type="datetime-local" required></label><br>';
+    maker += '<label>End: <input name="end" type="datetime-local" required></label><br>';
     
-    maker += '<br /><label>Location: <input name="name" type="text"></label><br>';
+    // TODO: Add Google Maps API for the location picker.
+    maker += '<br /><label>Location: <input name="name" type="text" required></label><br>';
     
     maker += '<br /><label>Image: <input name="name" type="file" accept="image/*"></label><br>';
     
-    maker += '<br /><label>Description: <textarea name="descr" maxlength="20000" rows="20" cols="100"></textarea></label><br>';
-    maker += '<label>Summary: <textarea name="tldr" maxlength="180" placeholder="Summarize in 180 characters" rows="2" cols="100"></textarea></label><br>';
+    maker += '<br /><label>Description: <textarea name="descr" maxlength="20000" rows="20" cols="100" required></textarea></label><br>';
+    maker += '<label>Summary: <textarea name="tldr" maxlength="180" placeholder="Summarize in 180 characters" rows="2" cols="100" required></textarea></label><br>';
     
     // Radio buttons. Only select one. Public selected by default
-    maker += '<br /><label title="Anyone can see this event">Public: <input name="view" type="radio" checked></label><br>';
-    maker += '<label title="Only you can see this event">Private: <input name="view" type="radio"></label><br>';
-    maker += '<label title="Only those with the link can see this event">Hidden: <input name="view" type="radio"></label><br>';
+    maker += '<br /><label title="Anyone can see this event">Public: <input name="view" type="radio" checked required></label><br>';
+    maker += '<label title="Only you can see this event">Private: <input name="view" type="radio" required></label><br>';
+    maker += '<label title="Only those with the link can see this event">Hidden: <input name="view" type="radio" required></label><br>';
     
 
     // add hidden token input
@@ -40,6 +41,8 @@ function displayMaker() {
     
     // end form
     maker += '</form>';
+
+    maker += '<br /><div id="message"></div>';
     // display
     body.innerHTML = maker;
 }
@@ -47,20 +50,42 @@ function displayMaker() {
 /**
  * Submit form to /create-event to create a new event
  */
-function createEvent() {
+function makeEvent() {
 
     // create token cookie
     let tokenValue = Math.random() * 10_000;
     document.cookie = "token=" + tokenValue + "; path=/";
 
-    // set token iput value
+    // set token input value
     let token = document.querySelector("#token");
     token.value = tokenValue;
 
     // TODO: input validation
 
-    // submit form
-    submitForm("/create-event")
+    // send POST to /create-event
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/create-event"); 
+    xhr.onload = function(event){ 
+
+        // if event creation is good
+        if (xhr.status === 200) {
+            
+            location.reload()
+          
+
+            // if event creation is bad is bad
+        } else if (xhr.status === 500) {
+
+            let message = document.querySelector("#message");
+
+            message.style.color = "red";
+            message.innerText = xhr.responseText;
+          
+        }
+    }; 
+
+    var formData = new FormData(document.getElementById("event-form")); 
+    xhr.send(formData);
 
     return false;
 }
