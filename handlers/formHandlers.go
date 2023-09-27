@@ -319,8 +319,11 @@ func UpdatePage(res http.ResponseWriter, req *http.Request) {
 		// put image into new file
 		io.Copy(file, imageFile)
 
-		// delete old image file
-		err = os.Remove("./templates/public/images/" + util.GetUserById(id).Url + "/" + util.GetUserPage(id).Banner)
+		// delete old image file if one exists
+		if strings.TrimSpace(util.GetUserPage(id).Banner) != "" {
+
+			err = os.Remove("./templates/public/images/" + util.GetUserById(id).Url + "/" + util.GetUserPage(id).Banner)
+		}
 		if err != nil {
 			util.LogError(err, "files")
 			http.Error(res, "Image file deletion error", 500)
@@ -569,5 +572,6 @@ func CreateEvent(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// get form data
+	http.Error(res, "Dummy response", 200)
 
 }

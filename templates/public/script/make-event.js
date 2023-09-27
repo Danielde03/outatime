@@ -36,13 +36,15 @@ function displayMaker() {
     // add hidden token input
     maker += '<input id="token" name="token" type="hidden" required value=" ">'
 
+    // add message text for 500 response text
+    maker += '<p id="message"></p>';
+
     // submit button
     maker += '<br /><input type="submit" value="Create Event">';
-    
+
     // end form
     maker += '</form>';
 
-    maker += '<br /><div id="message"></div>';
     // display
     body.innerHTML = maker;
 }
@@ -70,7 +72,11 @@ function makeEvent() {
         // if event creation is good
         if (xhr.status === 200) {
             
-            location.reload()
+            // location.reload()
+
+            // for testing. When done, new event will either reload the events page or take to the new event page itself.
+            message.style.color = "green";
+            message.innerText = xhr.responseText;
           
 
             // if event creation is bad is bad
