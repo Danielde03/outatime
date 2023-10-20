@@ -31,27 +31,9 @@ func Login(res http.ResponseWriter, req *http.Request) {
 		// get form data
 		email := req.FormValue("email")
 		password := req.FormValue("password")
-		token := req.FormValue("token")
 
-		tokenCookie, err := req.Cookie("token")
-
-		// remove token cookie
-		http.SetCookie(res, &http.Cookie{
-			Name:   "token",
-			Path:   "/",
-			MaxAge: -1,
-		})
-
-		// if no token - sign of bad intent
-		if err != nil {
-			util.LogError(err, "cookies")
-			http.Error(res, "Token cookie not found", 500)
-			return
-		}
-
-		// if token don't match - sign of bad intent
-		if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
-			http.Error(res, "Token does not match", 500)
+		// check token
+		if !util.CheckToken(res, req) {
 			return
 		}
 
@@ -168,27 +150,9 @@ func SignUp(res http.ResponseWriter, req *http.Request) {
 	password := req.FormValue("password")
 	username := req.FormValue("username")
 	url := req.FormValue("url")
-	token := req.FormValue("token")
 
-	tokenCookie, err := req.Cookie("token")
-
-	// delete token cookie
-	http.SetCookie(res, &http.Cookie{
-		Name:   "token",
-		Path:   "/",
-		MaxAge: -1,
-	})
-
-	// if no token - sign of bad intent
-	if err != nil {
-		util.LogError(err, "cookies")
-		http.Error(res, "Token cookie not found", 500)
-		return
-	}
-
-	// if token don't match - sign of bad intent
-	if token != tokenCookie.Value {
-		http.Error(res, "Token does not match", 500)
+	// check token
+	if !util.CheckToken(res, req) {
 		return
 	}
 
@@ -251,27 +215,8 @@ func UpdatePage(res http.ResponseWriter, req *http.Request) {
 	about := req.FormValue("about")
 	public := req.FormValue("isPublic")
 
-	// get token data
-	token := req.FormValue("token")
-	tokenCookie, err := req.Cookie("token")
-
-	// remove token cookie
-	http.SetCookie(res, &http.Cookie{
-		Name:   "token",
-		Path:   "/",
-		MaxAge: -1,
-	})
-
-	// if no token - sign of bad intent
-	if err != nil {
-		util.LogError(err, "cookies")
-		http.Error(res, "Token cookie not found", 500)
-		return
-	}
-
-	// if token don't match - sign of bad intent
-	if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
-		http.Error(res, "Token does not match", 500)
+	// check token
+	if !util.CheckToken(res, req) {
 		return
 	}
 
@@ -358,27 +303,8 @@ func UpdateAccount(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// get token data
-	token := req.FormValue("token")
-	tokenCookie, err := req.Cookie("token")
-
-	// remove token cookie
-	http.SetCookie(res, &http.Cookie{
-		Name:   "token",
-		Path:   "/",
-		MaxAge: -1,
-	})
-
-	// if no token - sign of bad intent
-	if err != nil {
-		util.LogError(err, "cookies")
-		http.Error(res, "Token cookie not found", 500)
-		return
-	}
-
-	// if token don't match - sign of bad intent
-	if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
-		http.Error(res, "Token does not match", 500)
+	// check token
+	if !util.CheckToken(res, req) {
 		return
 	}
 
@@ -488,27 +414,8 @@ func UpdatePassword(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// get token data
-	token := req.FormValue("token")
-	tokenCookie, err := req.Cookie("token")
-
-	// remove token cookie
-	http.SetCookie(res, &http.Cookie{
-		Name:   "token",
-		Path:   "/",
-		MaxAge: -1,
-	})
-
-	// if no token - sign of bad intent
-	if err != nil {
-		util.LogError(err, "cookies")
-		http.Error(res, "Token cookie not found", 500)
-		return
-	}
-
-	// if token don't match - sign of bad intent
-	if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
-		http.Error(res, "Token does not match", 500)
+	// check token
+	if !util.CheckToken(res, req) {
 		return
 	}
 
@@ -522,7 +429,7 @@ func UpdatePassword(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// update user without new avatar
-	_, err = util.DatabaseExecute("UPDATE outatime.\"user\" SET user_password=$1 WHERE user_id=$2;", password, id)
+	_, err := util.DatabaseExecute("UPDATE outatime.\"user\" SET user_password=$1 WHERE user_id=$2;", password, id)
 	if err != nil {
 		util.LogError(err, "database")
 		http.Error(res, "Database error", 500)
@@ -547,27 +454,8 @@ func CreateEvent(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// get token data
-	token := req.FormValue("token")
-	tokenCookie, err := req.Cookie("token")
-
-	// remove token cookie
-	http.SetCookie(res, &http.Cookie{
-		Name:   "token",
-		Path:   "/",
-		MaxAge: -1,
-	})
-
-	// if no token - sign of bad intent
-	if err != nil {
-		util.LogError(err, "cookies")
-		http.Error(res, "Token cookie not found", 500)
-		return
-	}
-
-	// if token don't match - sign of bad intent
-	if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
-		http.Error(res, "Token does not match", 500)
+	// check token
+	if !util.CheckToken(res, req) {
 		return
 	}
 

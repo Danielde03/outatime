@@ -141,3 +141,38 @@ func LogError(err error, logName string) bool {
 
 	return true
 }
+
+// Check that the toekn cookie and the token form value match
+//
+// If not, send 500 error and return false.
+//
+// If the token and cookie are good, return true.
+func CheckToken(res http.ResponseWriter, req *http.Request) bool {
+
+	// get token data
+	token := req.FormValue("token")
+	tokenCookie, err := req.Cookie("token")
+
+	// remove token cookie
+	http.SetCookie(res, &http.Cookie{
+		Name:   "token",
+		Path:   "/",
+		MaxAge: -1,
+	})
+
+	// if no token - sign of bad intent
+	if err != nil {
+		LogError(err, "cookies")
+		http.Error(res, "Token cookie not found", 500)
+		return false
+	}
+
+	// if token don't match - sign of bad intent
+	if token != tokenCookie.Value || strings.TrimSpace(token) == "" {
+		http.Error(res, "Token does not match", 500)
+		return false
+	}
+
+	return true
+
+}
