@@ -20,9 +20,9 @@ function displayMaker() {
     maker += '<label>End: <input name="end" type="datetime-local" required></label><br>';
     
     // TODO: Add Google Maps API for the location picker.
-    maker += '<br /><label>Location: <input name="name" type="text" required></label><br>';
+    maker += '<br /><label>Location: <input name="location" type="text" required></label><br>';
     
-    maker += '<br /><label>Image: <input name="name" type="file" accept="image/*"></label><br>';
+    maker += '<br /><label>Image: <input name="image" type="file" accept="image/*"></label><br>';
     
     maker += '<br /><label>Description: <textarea name="descr" maxlength="20000" rows="20" cols="100" required></textarea></label><br>';
     maker += '<label>Summary: <textarea name="tldr" maxlength="180" placeholder="Summarize in 180 characters" rows="2" cols="100" required></textarea></label><br>';
@@ -61,6 +61,17 @@ function makeEvent() {
     // set token input value
     let token = document.querySelector("#token");
     token.value = tokenValue;
+
+    // check "view" input, and send result based on name. (Can't do anything with the value "on")
+    if (document.getElementsByName("view")[0].checked) {
+        document.getElementsByName("view")[0].value = "public"
+
+    } else if (document.getElementsByName("view")[1].checked) {
+        document.getElementsByName("view")[1].value = "private"
+
+    } else if (document.getElementsByName("view")[2].checked) {
+        document.getElementsByName("view")[2].value = "hidden"
+    }
 
     // TODO: input validation
 

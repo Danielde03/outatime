@@ -460,6 +460,23 @@ func CreateEvent(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// get form data
-	http.Error(res, "Dummy response", 200)
+	eventName := req.FormValue("name")
+	eventStart := req.FormValue("start")
+	eventEnd := req.FormValue("end")
+	eventLocation := req.FormValue("location")
+	// imageFile, imageHandler, err := req.FormFile("image")
+	_, imageHandler, err := req.FormFile("image")
+	eventDescr := req.FormValue("descr")
+	eventTldr := req.FormValue("tldr")
+	eventView := req.FormValue("view")
+
+	if err != nil {
+		util.LogError(err, "files")
+		http.Error(res, "Image file error", 500)
+		return
+	}
+
+	// send result
+	http.Error(res, eventName+" "+eventStart+" "+eventEnd+" "+eventLocation+" "+imageHandler.Filename+" "+eventDescr+" "+eventTldr+" "+eventView, 200)
 
 }
