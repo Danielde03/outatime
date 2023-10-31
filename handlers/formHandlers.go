@@ -527,7 +527,16 @@ func CreateEvent(res http.ResponseWriter, req *http.Request) {
 		http.Error(res, "Event created", 200)
 
 	} else {
-		http.Error(res, eventName+" "+eventStart+" "+eventEnd+" "+eventLocation+" "+eventDescr+" "+eventTldr+" "+eventView, 200)
+		// save event
+		_, err = util.DatabaseExecute("INSERT INTO outatime.event(user_id, event_name, \"isPublic\", event_tldr, event_descr, event_start, event_end, event_location, event_img, event_code) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);", id, eventName, eventView == "public", eventTldr, eventDescr, eventStart, eventEnd, eventLocation, "", eventCode)
+		if err != nil {
+			util.LogError(err, "database")
+			http.Error(res, "Database error", 500)
+			return
+		}
+
+		// confirm
+		http.Error(res, "Event created", 200)
 
 	}
 

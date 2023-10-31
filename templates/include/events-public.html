@@ -7,7 +7,14 @@
         <p>This user has no public events</p>
 
     {{else}}
-        <p>Display events here</p>
+        <!-- Display events -->
+        {{range .PageUser.Event_List}}
+            <div class="event" style="border: 1px solid white;">
+                <p style="font-size: 40px;">{{.Name}}</p>
+                <p>{{.Tldr}}</p>
+                <p></p>
+            </div>
+        {{end}}
     {{end}}
 </div>
 {{end}}
