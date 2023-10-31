@@ -447,7 +447,7 @@ func CreateEvent(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// check user is logged in -extra level of security
-	loggedIn, _ := util.IsLoggedIn(req)
+	loggedIn, id := util.IsLoggedIn(req)
 
 	if !loggedIn {
 		http.Error(res, "No user logged in", 500)
@@ -460,23 +460,75 @@ func CreateEvent(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// get form data
+	req.ParseMultipartForm(32 << 20)
 	eventName := req.FormValue("name")
 	eventStart := req.FormValue("start")
 	eventEnd := req.FormValue("end")
 	eventLocation := req.FormValue("location")
-	// imageFile, imageHandler, err := req.FormFile("image")
-	_, imageHandler, err := req.FormFile("image")
+	imageFile, imageHandler, err := req.FormFile("image")
+	// _, imageHandler, err := req.FormFile("image")
 	eventDescr := req.FormValue("descr")
 	eventTldr := req.FormValue("tldr")
 	eventView := req.FormValue("view")
 
-	if err != nil {
+	// if user gives a file, and there is still an error
+	if err != nil && err.Error() != "http: no such file" {
 		util.LogError(err, "files")
 		http.Error(res, "Image file error", 500)
 		return
 	}
 
-	// send result
-	http.Error(res, eventName+" "+eventStart+" "+eventEnd+" "+eventLocation+" "+imageHandler.Filename+" "+eventDescr+" "+eventTldr+" "+eventView, 200)
+	// TODO: handle hidden, public or private
+	eventCode := " "
+	if eventView == "hidden" {
+
+		// if eventCode is blank or is not unique, get a new code
+		for eventCode == " " || !util.IsUnique(eventCode, "event_code", "event") {
+
+			eventCode, err = util.RandomString(5, 5)
+
+			if err != nil {
+				util.LogError(err, "util")
+				http.Error(res, "Code generation error", 500)
+				return
+			}
+
+		}
+
+	}
+
+	// if there is an image
+	if imageHandler != nil {
+
+		// make file
+		defer imageFile.Close()
+		imageName := imageHandler.Filename
+		file, err := os.OpenFile("./templates/public/images/"+util.GetUserById(id).Url+"/"+imageHandler.Filename, os.O_WRONLY|os.O_CREATE, 0666)
+
+		if err != nil {
+			util.LogError(err, "files")
+			http.Error(res, "Image file creation error", 500)
+			return
+		}
+		defer file.Close()
+
+		// put image into new file
+		io.Copy(file, imageFile)
+
+		// save event
+		_, err = util.DatabaseExecute("INSERT INTO outatime.event(user_id, event_name, \"isPublic\", event_tldr, event_descr, event_start, event_end, event_location, event_img, event_code) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);", id, eventName, eventView == "public", eventTldr, eventDescr, eventStart, eventEnd, eventLocation, imageName, eventCode)
+		if err != nil {
+			util.LogError(err, "database")
+			http.Error(res, "Database error", 500)
+			return
+		}
+
+		// confirm
+		http.Error(res, "Event created", 200)
+
+	} else {
+		http.Error(res, eventName+" "+eventStart+" "+eventEnd+" "+eventLocation+" "+eventDescr+" "+eventTldr+" "+eventView, 200)
+
+	}
 
 }
