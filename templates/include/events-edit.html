@@ -7,7 +7,16 @@
         <p>You have no events</p>
 
     {{else}}
-        <p>Display events here</p>
+        <!-- Display all my events --> 
+        {{range .PageUser.Event_List}}
+            <div class="event" style="border: 1px solid white; margin-bottom: 20px;">
+                <p style="font-size: 40px;">{{.Name}}</p>
+                <p>Summary: {{.Tldr}}</p>
+                <p>Status: {{.IsPrivate}}</p>
+                <p>{{.Code}}</p>
+                <p></p>
+            </div>
+        {{end}}
     {{end}}
 
 
@@ -19,7 +28,7 @@
         position: fixed;
         z-index: 5;
         bottom: 10vh;
-        left: calc(((100vw -  var(--content-width)) / 2) +  var(--content-width));
+        left: calc(((100vw -  var(--content-width)) / 2) +  var(--content-width) + 1vw);
         font-size: var(--header-height);
         text-align: center;
         padding: 0;

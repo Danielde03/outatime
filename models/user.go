@@ -27,6 +27,6 @@ type Event struct {
 	End         string
 	Location    string
 	Image       string
-	IsPrivate   bool
+	IsPrivate   string
 	Code        string
 }

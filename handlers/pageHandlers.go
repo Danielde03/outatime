@@ -176,13 +176,24 @@ func Events(res http.ResponseWriter, req *http.Request, user_url string) {
 		var end string
 		var loc string
 		var img string
-		var priv bool
+		var ispriv string
 		var code string
 
 		// load data into PageData host list
 		for rows.Next() {
-			rows.Scan(&name, &tldr, &descr, &start, &end, &loc, &img, &priv, &code)
-			data.PageUser.Event_List = append(data.PageUser.Event_List, models.Event{Name: name, Tldr: tldr, Description: descr, Start: start, End: end, Location: loc, Image: img, IsPrivate: priv, Code: code})
+			// reset code
+			code = ""
+
+			rows.Scan(&name, &tldr, &descr, &start, &end, &loc, &img, &ispriv, &code)
+
+			if code != "" && ispriv == "false" {
+				ispriv = "Hidden"
+			} else if code == "" && ispriv == "false" {
+				ispriv = "Private"
+			} else {
+				ispriv = "Public"
+			}
+			data.PageUser.Event_List = append(data.PageUser.Event_List, models.Event{Name: name, Tldr: tldr, Description: descr, Start: start, End: end, Location: loc, Image: img, IsPrivate: ispriv, Code: code})
 		}
 
 		// if logged in to own, show editable options

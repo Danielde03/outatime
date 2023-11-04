@@ -7,9 +7,9 @@
         <p>This user has no public events</p>
 
     {{else}}
-        <!-- Display events TODO: test does not show private events--> 
+        <!-- Display public events --> 
         {{range .PageUser.Event_List}}
-            <div class="event" style="border: 1px solid white;">
+            <div class="event" style="border: 1px solid white; margin-bottom: 20px;">
                 <p style="font-size: 40px;">{{.Name}}</p>
                 <p>{{.Tldr}}</p>
                 <p></p>
