@@ -64,3 +64,14 @@ func IsUnique(value string, field string, table string) bool {
 	// If rows are returned, it is in database, return false
 	return count == 0
 }
+
+// Return null string if string is empty
+func NewNullString(s string) sql.NullString {
+	if s == "" {
+		return sql.NullString{}
+	}
+	return sql.NullString{
+		String: s,
+		Valid:  true,
+	}
+}

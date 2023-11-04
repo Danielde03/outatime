@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS "outatime"."event" (
     "event_end"     TIMESTAMP       NOT NULL,
     "event_location"VARCHAR(100)    NOT NULL,
     "event_img"     VARCHAR(1024),
-    "event_code"    VARCHAR(100)    NOT NULL    UNIQUE,
+    "event_code"    VARCHAR(100)    UNIQUE,
     "subscribers"   INT             NOT NULL    DEFAULT 0
 );
 

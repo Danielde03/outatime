@@ -478,12 +478,12 @@ func CreateEvent(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// TODO: handle hidden, public or private
-	eventCode := " "
+	// if hidden, give a code
+	eventCode := ""
 	if eventView == "hidden" {
 
 		// if eventCode is blank or is not unique, get a new code
-		for eventCode == " " || !util.IsUnique(eventCode, "event_code", "event") {
+		for eventCode == "" || !util.IsUnique(eventCode, "event_code", "event") {
 
 			eventCode, err = util.RandomString(5, 5)
 
@@ -516,7 +516,7 @@ func CreateEvent(res http.ResponseWriter, req *http.Request) {
 		io.Copy(file, imageFile)
 
 		// save event
-		_, err = util.DatabaseExecute("INSERT INTO outatime.event(user_id, event_name, \"isPublic\", event_tldr, event_descr, event_start, event_end, event_location, event_img, event_code) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);", id, eventName, eventView == "public", eventTldr, eventDescr, eventStart, eventEnd, eventLocation, imageName, eventCode)
+		_, err = util.DatabaseExecute("INSERT INTO outatime.event(user_id, event_name, \"isPublic\", event_tldr, event_descr, event_start, event_end, event_location, event_img, event_code) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);", id, eventName, eventView == "public", eventTldr, eventDescr, eventStart, eventEnd, eventLocation, imageName, util.NewNullString(eventCode))
 		if err != nil {
 			util.LogError(err, "database")
 			http.Error(res, "Database error", 500)
@@ -528,7 +528,7 @@ func CreateEvent(res http.ResponseWriter, req *http.Request) {
 
 	} else {
 		// save event
-		_, err = util.DatabaseExecute("INSERT INTO outatime.event(user_id, event_name, \"isPublic\", event_tldr, event_descr, event_start, event_end, event_location, event_img, event_code) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);", id, eventName, eventView == "public", eventTldr, eventDescr, eventStart, eventEnd, eventLocation, "", eventCode)
+		_, err = util.DatabaseExecute("INSERT INTO outatime.event(user_id, event_name, \"isPublic\", event_tldr, event_descr, event_start, event_end, event_location, event_img, event_code) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);", id, eventName, eventView == "public", eventTldr, eventDescr, eventStart, eventEnd, eventLocation, "", util.NewNullString(eventCode))
 		if err != nil {
 			util.LogError(err, "database")
 			http.Error(res, "Database error", 500)
