@@ -48,6 +48,7 @@ func Hosts(res http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		util.LogError(err, "database")
 	}
+	defer rows.Close()
 
 	// load data into PageData host list
 	for rows.Next() {
@@ -168,6 +169,7 @@ func Events(res http.ResponseWriter, req *http.Request, user_url string) {
 		if err != nil {
 			util.LogError(err, "database")
 		}
+		defer rows.Close()
 
 		var name string
 		var tldr string
@@ -207,6 +209,7 @@ func Events(res http.ResponseWriter, req *http.Request, user_url string) {
 		if err != nil {
 			util.LogError(err, "database")
 		}
+		defer rows.Close()
 
 		var name string
 		var tldr string

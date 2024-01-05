@@ -130,6 +130,9 @@ func LogError(err error, logName string) bool {
 		log.SetOutput(overflowLog)
 		log.Println("Invalid log name was given. Error: ", err)
 
+		defer utilLog.Close()
+		defer overflowLog.Close()
+
 		return false
 	}
 
@@ -138,6 +141,8 @@ func LogError(err error, logName string) bool {
 	file, _ := os.OpenFile(fileName, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	log.SetOutput(file)
 	log.Println(err)
+
+	defer file.Close()
 
 	return true
 }

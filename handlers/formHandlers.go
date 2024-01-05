@@ -42,6 +42,7 @@ func Login(res http.ResponseWriter, req *http.Request) {
 		if err != nil {
 			util.LogError(err, "database")
 		}
+		defer rows.Close()
 
 		userId := ""
 		auth_code := ""
