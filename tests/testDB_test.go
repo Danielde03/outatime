@@ -9,7 +9,7 @@ import (
 // Test we can access the database
 func TestCanAccessDB(t *testing.T) {
 
-	_, err := util.DatabaseExecute("SELECT sub_id FROM outatime.subscriber")
+	err := util.GetConnection().Ping()
 
 	if err != nil {
 		t.Errorf("An error was returned when executing")
