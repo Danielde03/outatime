@@ -32,14 +32,14 @@ func DatabaseExecute(command string, args ...any) (*sql.Rows, error) {
 		return nil, err
 	}
 
+	defer db.Close()
+
 	// execute query and get results
 	results, err := db.Query(command, args...)
 
 	if err != nil {
 		return nil, err
 	}
-
-	defer db.Close()
 
 	return results, nil
 
