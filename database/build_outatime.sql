@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS "outatime"."user" (
 CREATE TABLE IF NOT EXISTS "outatime"."link" (
     "link_id"       SERIAL          PRIMARY KEY,
     "user_id"       INT             NOT NULL,
-    FOREIGN KEY     ("user_id")     REFERENCES "outatime"."user"("user_id"),
+    FOREIGN KEY     ("user_id")     REFERENCES "outatime"."user"("user_id") ON DELETE CASCADE,
     "link_url"      VARCHAR(1024)   NOT NULL,
     "type"          VARCHAR(100)    NOT NULL
 );
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS "outatime"."link" (
 CREATE TABLE IF NOT EXISTS "outatime"."user_page" (
     "page_id"       SERIAL          PRIMARY KEY,
     "user_id"       INT             NOT NULL,
-    FOREIGN KEY     ("user_id")     REFERENCES "outatime"."user"("user_id"),
+    FOREIGN KEY     ("user_id")     REFERENCES "outatime"."user"("user_id") ON DELETE CASCADE,
     "aboutUs"       VARCHAR(5000),
     "banner"        VARCHAR(1024),
     "isPublic"      BOOLEAN         NOT NULL    DEFAULT FALSE
@@ -79,7 +79,7 @@ CREATE TABLE IF NOT EXISTS "outatime"."user_page" (
 CREATE TABLE IF NOT EXISTS "outatime"."event" (
     "event_id"      SERIAL          PRIMARY KEY,
     "user_id"       INT             NOT NULL,
-    FOREIGN KEY     ("user_id")     REFERENCES "outatime"."user"("user_id"),
+    FOREIGN KEY     ("user_id")     REFERENCES "outatime"."user"("user_id") ON DELETE CASCADE,
     "event_name"    VARCHAR(50)     NOT NULL,
     "isPublic"      BOOLEAN         NOT NULL    DEFAULT FALSE,
     "event_tldr"    VARCHAR(200)    NOT NULL,
@@ -117,7 +117,7 @@ CREATE TABLE IF NOT EXISTS "outatime"."subscription" (
     "sub_id"            INT             NOT NULL,
     "user_id"           INT,
     "event_id"          INT,
-    FOREIGN KEY     ("sub_id")     REFERENCES "outatime"."subscriber"("sub_id"),
-    FOREIGN KEY     ("user_id")     REFERENCES "outatime"."user"("user_id"),
-    FOREIGN KEY     ("event_id")     REFERENCES "outatime"."event"("event_id")
+    FOREIGN KEY     ("sub_id")     REFERENCES "outatime"."subscriber"("sub_id") ON DELETE CASCADE,
+    FOREIGN KEY     ("user_id")     REFERENCES "outatime"."user"("user_id") ON DELETE CASCADE,
+    FOREIGN KEY     ("event_id")     REFERENCES "outatime"."event"("event_id") ON DELETE CASCADE
 );
